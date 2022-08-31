@@ -1,0 +1,187 @@
+<?php
+
+
+namespace app\{{$Module|strtolower}}\controller;
+
+
+use app\common\exception\DbException;
+use app\common\exception\RequestException;
+use app\common\model\{{$Name|camelize|ucfirst}}Model;
+use app\{{$Module|strtolower}}\validate\{{$Name|camelize|ucfirst}}Validate;
+use think\facade\Request;
+use Tools\Responses;
+
+class {{$Name|camelize|ucfirst}}Controller
+{
+
+
+    /**
+     * 数据列表
+     *
+     * @return Responses
+     * */
+    public function lists()
+    {
+
+        ${{$Name|camelize|ucfirst}}Model = new {{$Name|camelize|ucfirst}}Model();
+
+        //处理过滤
+        $filters = Request::post('filters',[]);
+        if($filters && is_array($filters)){
+            foreach ($filters as $name=>$value){
+                switch ($name){
+                    case 'ids':
+                        if($value && is_array($value)){
+                            ${{$Name|camelize|ucfirst}}Model = ${{$Name|camelize|ucfirst}}Model->where('id','in',$value);
+                        }
+                        break;
+                }
+            }
+        }
+
+        $page_size = Request::post('page_size',env('page_size',10));
+
+        $lists = ${{$Name|camelize|ucfirst}}Model
+            ->paginate($page_size)
+            ->toArray();
+
+        $datas = $lists['data'];
+
+        //组装分页
+        $pages = get_list_pages($lists);
+        return Responses::data(200, 'success',$datas,compact('pages'));
+
+    }
+
+
+    /**
+     * 数据详情
+     *
+     * @return Responses
+     * */
+    public function detail()
+    {
+
+        //表单验证
+        $validate = new {{$Name|camelize|ucfirst}}Validate();
+        $vResult = $validate->scene(__FUNCTION__)->check(Request::post());
+        if(!$vResult){
+            throw new RequestException( $validate->getError(),40003);
+        }
+
+        $id = Request::post('id');
+        $info = {{$Name|camelize|ucfirst}}Model::where('id','=',$id)->find();
+        if(!$info){
+            throw new RequestException( '数据不存在',40402);
+        }
+
+        return Responses::data(200, 'success',$info);
+
+    }
+
+
+    /**
+     * 创建数据
+     *
+     * @return Responses
+     * */
+    public function create()
+    {
+
+        //表单验证
+        $validate = new {{$Name|camelize|ucfirst}}Validate();
+        $vResult = $validate->scene(__FUNCTION__)->check(Request::post());
+        if(!$vResult){
+            throw new RequestException( $validate->getError(),40003);
+        }
+
+        $data = [];
+        $data['title'] = Request::post('title','','trim,strip_tags,htmlspecialchars');
+        $data['sort'] = Request::post('sort',0,'intval');
+        $data['status'] = 2;
+
+        try {
+
+            $info = {{$Name|camelize|ucfirst}}Model::create($data);
+            if(!$info){
+                throw new DbException('数据添加失败',50001);
+            }
+
+            return Responses::data(200, 'success',['id'=>$info->id]);
+
+        }catch (DbException $e){
+            return Responses::data(50001, $e->getMessage());
+        }
+
+    }
+
+
+    /**
+     * 更新数据
+     *
+     * @return Responses
+     * */
+    public function update()
+    {
+
+        //表单验证
+        $validate = new {{$Name|camelize|ucfirst}}Validate();
+        $vResult = $validate->scene(__FUNCTION__)->check(Request::post());
+        if(!$vResult){
+            throw new RequestException( $validate->getError(),40003);
+        }
+
+        $id = Request::post('id');
+        $info = {{$Name|camelize|ucfirst}}Model::where('id','=',$id)->find();
+        if(!$info){
+            throw new RequestException( '数据不存在',40402);
+        }
+
+        $data = [];
+        $data['title'] = Request::post('title','','trim,strip_tags,htmlspecialchars');
+        $data['sort'] = Request::post('sort',0,'intval');
+
+        try {
+
+            $result = {{$Name|camelize|ucfirst}}Model::where('id','=',$id)->update($data);
+            if(!$result){
+                throw new DbException('数据更新失败',50001);
+            }
+
+            return Responses::data(200, 'success');
+
+        }catch (DbException $e){
+            return Responses::data(50001, $e->getMessage());
+        }
+
+    }
+
+
+    /**
+     * 删除数据
+     *
+     * @return Responses
+     * */
+    public function delete()
+    {
+
+        //表单验证
+        $validate = new {{$Name|camelize|ucfirst}}Validate();
+        $vResult = $validate->scene(__FUNCTION__)->check(Request::post());
+        if(!$vResult){
+            throw new RequestException( $validate->getError(),40003);
+        }
+
+        $id = Request::post('id');
+
+        try {
+            {{$Name|camelize|ucfirst}}Model::where('id','=',$id)->delete();
+        }catch (DbException $e){
+            throw new DbException('数据删除失败',50001);
+        }
+
+        return Responses::data(200, 'success');
+    }
+
+
+}

@@ -1,0 +1,181 @@
+<{include file="public/header" /}>
+<style>
+    .top-panel {
+        border: 1px solid #eceff9;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .top-panel > .layui-card-body{
+        height: 60px;
+    }
+    .top-panel-number{
+        line-height:60px;
+        font-size: 30px;
+        border-right:1px solid #eceff9;
+    }
+    .top-panel-tips{
+        line-height:30px;
+        font-size: 12px
+    }
+</style>
+
+<!--<div class="layuimini-container">-->
+<div class="layuimini-main">
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-md3">
+
+            <div class="layui-card top-panel">
+                <div class="layui-card-header">用户数量</div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-xs9 layui-col-md9 top-panel-number user_total" style="border: none;width: 100%">0</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-col-xs12 layui-col-md3">
+
+            <div class="layui-card top-panel">
+                <div class="layui-card-header">管理数量</div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-xs9 layui-col-md9 top-panel-number admin_total" style="border: none;width: 100%">0</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-col-xs12 layui-col-md3">
+
+            <div class="layui-card top-panel">
+                <div class="layui-card-header">超级商人</div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-xs9 layui-col-md9 top-panel-number merchant_level_total" style="border: none;width: 100%">0</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-col-xs12 layui-col-md3">
+
+            <div class="layui-card top-panel">
+                <div class="layui-card-header">喵达人</div>
+                <div class="layui-card-body">
+                    <div class="layui-row layui-col-space5">
+                        <div class="layui-col-xs9 layui-col-md9 top-panel-number user_level_total" style="border: none;width: 100%">0</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-md12">
+            <div id="echarts-orders" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var $;
+    layui.use(['layer', 'echarts'], function () {
+        $ = layui.jquery;
+        var layer = layui.layer,
+            echarts = layui.echarts;
+
+        load_data(echarts);
+    });
+
+    function load_data(echarts) {
+        //提交
+        $.post("<{:admin_api_url('welcome/detail')}>",{},function(res){
+            ajax_response_filtr(res,$adminConfig);
+            if(res.status == 200){
+                let datas = res.data;
+
+                //统计类
+                $('.admin_total').text(datas.totals.admin);
+                $('.user_total').text(datas.totals.user);
+                $('.merchant_level_total').text(datas.totals.merchant_level);
+                $('.user_level_total').text(datas.totals.user_level);
+
+                show_echarts(echarts,datas);
+
+            }
+        },'json');
+    }
+
+
+    function show_echarts(echarts,datas) {
+
+        /**
+         * 报表功能
+         */
+        var echartsOrders = echarts.init(document.getElementById('echarts-orders'), 'walden');
+
+        var optionOrders = {
+            title: {
+                text: '近七日交易流水'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data: ['余额支付','微信支付']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: datas.order.dates
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '余额支付',
+                    type: 'line',
+                    stack: '总量',
+                    areaStyle: {},
+                    data: datas.order.datas['wallet']
+                },
+                {
+                    name: '微信支付',
+                    type: 'line',
+                    areaStyle: {},
+                    data: datas.order.datas['wechat']
+                }
+            ]
+        };
+        echartsOrders.setOption(optionOrders);
+
+
+    }
+
+</script>
+<{include file="public/footer" /}>

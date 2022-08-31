@@ -1,0 +1,110 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">任务佣金</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">普通用户</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_task_rate" lay-verify="required" lay-reqtext="普通用户任务佣金不能为空" placeholder="请输入普通用户任务佣金"  value="<{$configs['commission_task_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">VIP用户</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_task_vip_rate" lay-verify="required" lay-reqtext="VIP用户任务佣金不能为空" placeholder="请输入VIP用户任务佣金"  value="<{$configs['commission_task_vip_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">任务分佣</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">一级好友</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_spread_rate" lay-verify="required" lay-reqtext="任务分佣(一级)不能为空" placeholder="请输入任务分佣(一级)"  value="<{$configs['commission_spread_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">一级好友</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_spread2_rate" lay-verify="required" lay-reqtext="任务分佣(二级)不能为空" placeholder="请输入任务分佣(二级)"  value="<{$configs['commission_spread2_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">好友分佣</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">开通超级商人</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_buy_merchant_level_rate" lay-verify="required" lay-reqtext="开通超级商人比例不能为空" placeholder="请输入开通超级商人比例"  value="<{$configs['commission_buy_merchant_level_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">购买刷新数量</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_buy_refresh_rate" lay-verify="required" lay-reqtext="购买刷新数量比例不能为空" placeholder="请输入购买刷新数量比例"  value="<{$configs['commission_buy_refresh_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">活动上推荐</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="commission_activity_rec_rate" lay-verify="required" lay-reqtext="活动上推荐比例不能为空" placeholder="请输入活动上推荐比例"  value="<{$configs['commission_activity_rec_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0 ~ 100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+
+            let url = "<{:admin_api_url('setting/commission')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

@@ -1,0 +1,39 @@
+<div class="edit_temp_html" style="display: none"></div>
+<div class="layui-form layuimini-form" style="padding: 20px">
+    <input type="hidden" name="id" value="<{$info.id}>">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">单页标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空" placeholder="请输入标题" value="<{$info.title}>" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">单页名称</label>
+        <div class="layui-input-block">
+            <input type="text" disabled lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="<{$info.name}>" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">页面排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" placeholder="请输入排序值，越大越靠前" value="<{$info.sort}>" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" lay-skin="switch" lay-text="显示|隐藏" <?php echo $info['status'] == 1 ? 'checked' : '';?> >
+        </div>
+    </div>
+    <div class="layui-form-item html-content-box">
+        <label class="layui-form-label required">文章内容</label>
+        <div class="layui-input-block">
+            <textarea placeholder="" class="layui-textarea" name="content" id="content" lay-verify="content" style="display: none;"><{$info.content}></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-article-update-submit" id="LAY-article-update-submit" value="确认">
+    </div>
+
+</div>

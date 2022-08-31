@@ -1,0 +1,468 @@
+<div class="detail_box layui-form layuimini-form" style="padding: 20px;">
+    <style>
+        .detail_box input{
+            border: none
+        }
+        .detail_box textarea{
+            border: none
+        }
+    </style>
+    <div class="layui-row">
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">活动信息</blockquote>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">所素分类:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.category.title}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">项目标题:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.project_title}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动标题:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.title}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">跳转链接:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.link|default='---'}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">文字要求:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.text_require|default='---'}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">限时提交:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.limited_submit}>小时" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">审核周期:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.audit_cycle}>小时" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动单价:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.activity.price}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">任务步骤</blockquote>
+
+                <style>
+                    .stepList{
+                        display: flex;
+                        align-items: stretch;
+                        flex-wrap: wrap;
+                    }
+                    .stepRow{
+                        width: 320px;
+                        border: 1px dashed #ccc;
+                        margin: 15px;
+                        padding: 15px;
+                    }
+                    .stepRow .index{
+                        width: 100%;
+                        line-height: 30px;
+                        margin-bottom: 10px;
+                    }
+                    .stepRow .describe{
+                        width: 100%;
+                        line-height: 30px;
+                        margin-bottom: 10px;
+                    }
+                    .stepRow img{
+                        width: 100%;
+                        height: 100%;
+                        cursor: pointer;
+                    }
+                </style>
+
+                <div class="stepList">
+                    <{volist name="$info.steps" id="step"}>
+                    <div class="stepRow">
+                        <div class="index">第<{$key+1}>步 (图文说明)</div>
+                        <div class="describe"><{$step.describe}></div>
+                        <div class="image"><img src="<{$step.image}>" alt="" onclick="show_image_box(this.src,800,600)"></div>
+                    </div>
+                    <{/volist}>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">任务信息</blockquote>
+
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">商家信息:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.merchant.id}> : <{$info.merchant.nick_name}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">接单人信息:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.user.id}> : <{$info.user.nick_name}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">任务状态:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <?php $statusList = [1=>'待提交',2=>'待审核',3=>'未通过',4=>'取消',5=>'复审',6=>'举报',100=>'已完成'];?>
+                        <input type="text" disabled  value="<{$statusList[$info['status']]}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">复审状态:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <?php $recheck_status_list = [0=>'---',1=>'待提交',2=>'待审核',3=>'驳回',100=>'通过'];?>
+                        <input type="text" disabled  value="<{$recheck_status_list[$info['recheck_status']]}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">举报状态:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <?php $report_status_list = [0=>'---',1=>'待辩诉',2=>'待平台处理',100=>'接单者胜诉',101=>'商家胜诉',102=>'辩方超时',103=>'接单者取消任务',104=>'商家重新确认'];?>
+                        <input type="text" disabled  value="<{$report_status_list[$info['report_status']]}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <{if $info['status'] >= 2}>
+        <style>
+            .taskStepList{
+                display: flex;
+                align-items: stretch;
+                flex-wrap: wrap;
+            }
+            .taskStepList img{
+                width: 100%;
+                height: 100%;
+                min-width: 100px;
+                max-width: 300px;
+                margin: 15px;
+                cursor: pointer;
+            }
+        </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">初次提交</blockquote>
+
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">提交文本:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$info.text_require}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">提交图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$info.task_steps" id="step"}>
+                                <{if $step['type'] == 2 && $step['num_type'] == 1}>
+                                    <img src="<{$step.sub_image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                                <{/if}>
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['audit_reason']}>
+            <style>
+                .taskStepList{
+                    display: flex;
+                    align-items: stretch;
+                    flex-wrap: wrap;
+                }
+                .taskStepList img{
+                    width: 100%;
+                    height: 100%;
+                    min-width: 100px;
+                    max-width: 300px;
+                    margin: 15px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">初审驳回信息</blockquote>
+                <?php $audit_reason = $info['audit_reason']; ?>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">驳回原因:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$audit_reason.text}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">说明图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$audit_reason.images" id="image"}>
+                                <img src="<{$image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['recheck_status'] >= 2}>
+        <style>
+            .taskStepList{
+                display: flex;
+                align-items: stretch;
+                flex-wrap: wrap;
+            }
+            .taskStepList img{
+                width: 100%;
+                height: 100%;
+                min-width: 100px;
+                max-width: 300px;
+                margin: 15px;
+                cursor: pointer;
+            }
+        </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">复审提交</blockquote>
+
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">提交文本:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$info.recheck_text_require}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">提交图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$info.task_steps" id="step"}>
+                            <{if $step['type'] == 2 && $step['num_type'] == 2}>
+                                    <img src="<{$step.sub_image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                                <{/if}>
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['audit_reason']}>
+            <style>
+                .taskStepList{
+                    display: flex;
+                    align-items: stretch;
+                    flex-wrap: wrap;
+                }
+                .taskStepList img{
+                    width: 100%;
+                    height: 100%;
+                    min-width: 100px;
+                    max-width: 300px;
+                    margin: 15px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">复审驳回信息</blockquote>
+                <?php $recheck_reason = $info['recheck_reason']; ?>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">驳回原因:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$recheck_reason.text}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">说明图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$recheck_reason.images" id="image"}>
+                                <img src="<{$image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['report_status'] >= 1}>
+        <style>
+            .taskStepList{
+                display: flex;
+                align-items: stretch;
+                flex-wrap: wrap;
+            }
+            .taskStepList img{
+                width: 100%;
+                height: 100%;
+                min-width: 100px;
+                max-width: 300px;
+                margin: 15px;
+                cursor: pointer;
+            }
+        </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">举报提交</blockquote>
+                <?php $report_data = $info['report_data']; ?>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">举报原因:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$report_data.text}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">说明图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$report_data.images" id="image"}>
+                                <img src="<{$image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['report_bl_data']}>
+            <style>
+                .taskStepList{
+                    display: flex;
+                    align-items: stretch;
+                    flex-wrap: wrap;
+                }
+                .taskStepList img{
+                    width: 100%;
+                    height: 100%;
+                    min-width: 100px;
+                    max-width: 300px;
+                    margin: 15px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">举报辩论信息</blockquote>
+                <?php $report_bl_data = $info['report_bl_data']; ?>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">辩论说明:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$report_bl_data.text}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md12 layui-col-lg12">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">说明图片:</label>
+                        <div class="layui-input-block taskStepList">
+                            <{volist name="$report_bl_data.images" id="image"}>
+                                <img src="<{$image}>" alt="" onclick="show_image_box(this.src,800,600)">
+                            <{/volist}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+        <{if $info['report_reason']}>
+            <style>
+                .taskStepList{
+                    display: flex;
+                    align-items: stretch;
+                    flex-wrap: wrap;
+                }
+                .taskStepList img{
+                    width: 100%;
+                    height: 100%;
+                    min-width: 100px;
+                    max-width: 300px;
+                    margin: 15px;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="layui-col-md12 layui-col-lg12">
+                <blockquote class="layui-elem-quote">举报结果信息</blockquote>
+                <?php $report_reason = $info['report_reason']; ?>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">处理结果:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <?php $report_status_list = [0=>'---',1=>'待辩诉',2=>'待平台处理',100=>'接单者胜诉',101=>'商家胜诉',102=>'辩方超时',103=>'接单者取消任务',104=>'商家重新确认'];?>
+                            <input type="text" disabled  value="<{$report_status_list[$info['report_status']]}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6 layui-col-lg6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">备注说明:</label>
+                        <div class="layui-input-inline" style="min-width: 400px">
+                            <input type="text" disabled  value="<{$report_reason.text}>" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <{/if}>
+
+    </div>
+
+</div>

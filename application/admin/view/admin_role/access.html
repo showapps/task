@@ -1,0 +1,68 @@
+<div class="layui-form" lay-filter="layuiadmin-form-useradmin" id="layuiadmin-form-useradmin" style="padding: 20px 0 0 0;">
+    <input type="hidden" name="role_id" value="<{$role['id']}>">
+    <style>
+        #access_box .checkbox_all{
+            width: calc(100% - 5px);
+            margin-left: 5px;
+            display: block;
+        }
+
+        #access_box .module{
+            width: calc(100% - 50px);
+            margin-left: 50px;
+            display: block;
+        }
+
+        #access_box .action{
+            width: calc(100% - 200px);
+            max-width: calc(100% - 200px);
+            margin-left: 100px;
+            display: block;
+        }
+
+        #access_box .action .col{
+            float: left;
+            width: 200px;
+            padding-top:10px;
+            padding-bottom:10px;
+            margin-right: 30px;
+        }
+    </style>
+    <table class="layui-table" id="access_box">
+        <tbody>
+
+        <tr>
+            <td>
+                <div class="checkbox_all layui-input-block" id="checkbox_all_box">
+                    <input type="checkbox" lay-skin="primary" id="checkbox_all" title="全部"   lay-filter="checkbox_all_checked">
+                </div>
+            </td>
+        </tr>
+
+
+        <{foreach $list as $module }>
+
+            <tr>
+                <td>
+                    <div class="module layui-input-block" id="module_<{$module['id']}>_box">
+                        <input type="checkbox" lay-skin="primary" name="node_ids[]" id="module_id_<{$module['id']}>" title="<{$module['title']}>" <?php echo $module['is_choose'] === true ? 'checked' : '';?> value="<{$module['id']}>"  lay-filter="module_node_checked">
+                    </div>
+                    <div class="action layui-input-block" id="module_<{$module['id']}>_child_box">
+                        <{foreach $module['child_nodes'] as $action }>
+                            <div class="col">
+                                <input type="checkbox" name="node_ids[]" lay-skin="primary" id="action_id_<{$action['id']}>"  title="<{$action['title']}>" module_id="<{$module['id']}>" <?php echo $action['is_choose'] === true ? 'checked' : '';?> lay-filter="action_node_checked" value="<{$action['id']}>" >
+                            </div>
+                        <{/foreach}>
+                    </div>
+                </td>
+            </tr>
+
+
+        <{/foreach}>
+
+        </tbody>
+    </table>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-adminrole-access-submit" id="LAY-adminrole-access-submit" value="确认">
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="add_box layui-form layuimini-form" style="padding: 20px;">
+
+    <input type="hidden" name="id" value="<{$info.id}>">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">封禁权限</label>
+        <?php
+            $authoritys = [
+               1001=>['id'=>1001,'title'=>'登录','check'=>in_array(1001,$info['authoritys']) ? 1 : 0],
+               1002=>['id'=>1002,'title'=>'聊天','check'=>in_array(1002,$info['authoritys']) ? 1 : 0],
+               1003=>['id'=>1003,'title'=>'提现','check'=>in_array(1003,$info['authoritys']) ? 1 : 0],
+               1004=>['id'=>1004,'title'=>'发布活动','check'=>in_array(1004,$info['authoritys']) ? 1 : 0],
+               1005=>['id'=>1005,'title'=>'申请任务','check'=>in_array(1005,$info['authoritys']) ? 1 : 0],
+            ];
+        ?>
+        <div class="layui-input-inline authoritys-box" style="min-width: 350px">
+            <{volist name="authoritys" id="vo"}>
+                <input type="checkbox" lay-skin="primary" name="authoritys[]" value="<{$vo.id}>" title="<{$vo.title}>" <?php echo $vo['check'] == 1 ? 'checked' : '';?>>
+            <{/volist}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">到期时间:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <input type="text" name="end_dt" id="blacklist_end_dt" lay-verify="required" lay-reqtext="请选择解封时间"  placeholder="请选择解封时间" class="layui-input" readonly value="<{$info.end_dt}>">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label required">备注信息:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <textarea name="content" lay-verify="required" lay-reqtext="备注信息不能为空"  placeholder="请输入备注信息" class="layui-textarea" maxlength="100"><{$info.content}></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-blacklist-mod-submit" id="LAY-blacklist-mod-submit" value="确认">
+    </div>
+
+</div>

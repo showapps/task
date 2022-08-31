@@ -1,0 +1,315 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'task';
+?>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box" style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索内容</label>
+                            <div class="layui-input-inline" style="min-width: 240px">
+                                <input type="text" name="filters[search_text]" autocomplete="off" class="layui-input" placeholder="活动ID、商家ID、接单手ID、任务ID">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">所属分类</label>
+                            <div class="layui-input-inline" style="min-width: 100px">
+                                <select id="filters-category_id" name="filters[category_id]">
+                                    <option value="0">全部</option>
+                                    <{volist name="categorys" id= "category"}>
+                                        <option value="<{$category.id}>"><{$category.title}></option>
+                                    <{/volist}>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">任务状态</label>
+                            <div class="layui-input-inline" style="min-width: 100px">
+                                <select id="filters-status" name="filters[status]">
+                                    <option value="0">全部</option>
+                                    <option value="1">待提交</option>
+                                    <option value="2">待审核</option>
+                                    <option value="3">未通过</option>
+                                    <option value="4">取消</option>
+                                    <option value="5">复审</option>
+                                    <option value="6">举报</option>
+                                    <option value="100">完成</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <!--<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>-->
+            </div>
+        </script>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">详情</a>
+
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'referee')}>
+                {{#  if(d.status == 6 && d.report_status == 2){ }}
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="referee">裁判</a>
+                {{#  } else { }}
+                    <a class="layui-btn layui-btn-xs layui-btn-disabled" onclick="error_msg('不可操作')">裁判</a>
+                {{#  } }}
+            <{/if}>
+        </script>
+
+        <script type="text/html" id="categoryTitleTextTpl">
+            {{d.category.title}}
+        </script>
+
+        <script type="text/html" id="activityTitleTextTpl">
+            {{d.activity.id}} : {{d.activity.title}}
+        </script>
+
+        <script type="text/html" id="merchantTextTpl">
+            {{d.merchant.id}} : {{d.merchant.nick_name}}
+        </script>
+
+        <script type="text/html" id="userTextTpl">
+            {{d.user.id}} : {{d.user.nick_name}}
+        </script>
+
+        <script type="text/html" id="activityPriceTextTpl">
+            {{d.activity.price}}
+        </script>
+
+        <script type="text/html" id="statusTextTpl">
+            {{#  if(d.status == 1){ }}
+            待提交
+            {{#  }else if(d.status == 2){ }}
+            待审核
+            {{#  }else if(d.status == 3){ }}
+            未通过
+            {{#  }else if(d.status == 4){ }}
+            取消
+            {{#  }else if(d.status == 5){ }}
+            复审
+            {{#  }else if(d.status == 6){ }}
+            举报
+            {{#  }else if(d.status == 100){ }}
+            已完成
+            {{#  }else{ }}
+            未知
+            {{#  } }}
+        </script>
+
+        <script type="text/html" id="recheckStatusTextTpl">
+            {{#  if(d.recheck_status == 1){ }}
+            待复审
+            {{#  }else if(d.recheck_status == 2){ }}
+            待审核
+            {{#  }else if(d.recheck_status == 3){ }}
+            驳回
+            {{#  }else if(d.recheck_status == 100){ }}
+            通过
+            {{#  }else{ }}
+            --
+            {{#  } }}
+        </script>
+        <script type="text/html" id="reportStatusTextTpl">
+            {{#  if(d.report_status == 1){ }}
+            待辩诉
+            {{#  }else if(d.report_status == 2){ }}
+            待平台处理
+            {{#  }else if(d.report_status == 100){ }}
+            接单者胜诉
+            {{#  }else if(d.report_status == 101){ }}
+            商家胜诉
+            {{#  }else if(d.report_status == 102){ }}
+            辩方超时
+            {{#  }else if(d.report_status == 103){ }}
+            接单者取消任务
+            {{#  }else if(d.report_status == 104){ }}
+            商家重新确认
+            {{#  }else{ }}
+            --
+            {{#  } }}
+        </script>
+    </div>
+</div>
+
+<script>
+
+    layui.use(['form', 'table'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('task/list')}>"
+                <{include file="public/table_common" /}>,
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'category_title',minWidth: 100, title: '所属分类', templet:"#categoryTitleTextTpl"},
+                {field: 'title', title: '活动ID:活动标题',minWidth: 200, templet:"#activityTitleTextTpl"},
+                {field: 'merchant', title: '商家ID:昵称', templet:"#merchantTextTpl"},
+                {field: 'user', title: '接单手ID:昵称', templet:"#userTextTpl"},
+                {field: 'price', title: '单价', templet:"#activityPriceTextTpl"},
+                {field: 'updated_at', width: 200, title: '更新时间', hide: true},
+                {field: 'status', width: 110, title: '状态', templet:"#statusTextTpl", sort: true},
+                {field: 'recheck_status', width: 110, title: '复审状态', templet:"#recheckStatusTextTpl", sort: true},
+                {field: 'report_status', width: 110, title: '举报状态', templet:"#reportStatusTextTpl", sort: true},
+                {field: 'tool',title: '操作', minWidth: 120, fixed:'right',templet:'#currentTableBar', align: "center"}
+            ]]
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            set_list_filters(data.field);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                let url = "<{:admin_api_url('task/detail')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '广告详情',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['95%', '95%'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                form.render();
+                            }
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if (obj.event === 'referee') {
+
+                let url = "<{:admin_api_url('task/referee')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '平台裁判',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['520px', '320px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-task-referee-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+
+                                    var field = data.field; //获取提交的字段
+                                    field.type = field.type == 1 ? 1 : 2;
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if (obj.event === 'delete') {
+
+                layer.confirm('您真的要删除这个广告吗？', function (index) {
+                    layer.close(index);
+                    let url = "<{:admin_api_url('task/delete')}>";
+                    $.post(url,{id: data.id},function(res){
+                        ajax_response_filtr(res,$adminConfig);
+                        if(res.status == 200){
+                            obj.del();
+                            success_msg('操作成功');
+                        }
+                    },'json');
+                });
+                return false;
+            }
+        });
+
+    });
+
+
+    function delete_content_row(index) {
+        $('.material-list .material-row[data-content-index="'+index+'"]').remove();
+    }
+</script>
+
+<{include file="public/footer" /}>

@@ -1,0 +1,227 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+    .layui-form-label{
+        min-width: 115px;
+    }
+    .layui-word-aux{
+        min-width: 100px;
+    }
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">基础数据</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">总用户数</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_data_user_total" lay-verify="required" lay-reqtext="总用户数不能为空" placeholder="请输入总用户数"  value="<{$configs['screen_data.user_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">人</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">总企业数</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_data_company_total" lay-verify="required" lay-reqtext="总企业数不能为空" placeholder="请输入总企业数"  value="<{$configs['screen_data.company_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">家</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">人才数据</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">简历总数</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_resume_total" lay-verify="required" lay-reqtext="总简历数不能为空" placeholder="请输入总简历数"  value="<{$configs['screen_talent_data.resume_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">份</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">总职位数</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_job_total" lay-verify="required" lay-reqtext="总职位数不能为空" placeholder="请输入总职位数"  value="<{$configs['screen_talent_data.job_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">位</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">本月新增人才</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_current_month_resume_total" lay-verify="required" lay-reqtext="本月新增人才不能为空" placeholder="请输入本月新增人才"  value="<{$configs['screen_talent_data.current_month_resume_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">位</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">本月新增职位</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_current_month_job_total" lay-verify="required" lay-reqtext="本月新增职位不能为空" placeholder="请输入本月新增职位"  value="<{$configs['screen_talent_data.current_month_job_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">位</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">累计服务客户</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_service_customer_total" lay-verify="required" lay-reqtext="累计服务客户不能为空" placeholder="请输入累计服务客户"  value="<{$configs['screen_talent_data.service_customer_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">位</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">累计服务企业</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_service_company_total" lay-verify="required" lay-reqtext="累计服务企业不能为空" placeholder="请输入累计服务企业"  value="<{$configs['screen_talent_data.service_company_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">家</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">累计服务总次数</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_service_total" lay-verify="required" lay-reqtext="累计服务总次数不能为空" placeholder="请输入累计服务总次数"  value="<{$configs['screen_talent_data.service_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">次</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">综合业务转化率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_business_conversion_rate" lay-verify="required" lay-reqtext="综合业务转化率不能为空" placeholder="请输入综合业务转化率"  value="<{$configs['screen_talent_data.business_conversion_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">人才简历回复率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_resume_response_ratio" lay-verify="required" lay-reqtext="人才简历回复率不能为空" placeholder="请输入人才简历回复率"  value="<{$configs['screen_talent_data.resume_response_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">企业职位响应率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_job_response_ratio" lay-verify="required" lay-reqtext="企业职位响应率不能为空" placeholder="请输入企业职位响应率"  value="<{$configs['screen_talent_data.job_response_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">综合业务通过率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_talent_data_business_pass_ratio" lay-verify="required" lay-reqtext="综合业务通过率不能为空" placeholder="请输入综合业务通过率"  value="<{$configs['screen_talent_data.business_pass_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">金融数据</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">合作银行</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_cooperative_bank_total" lay-verify="required" lay-reqtext="合作银行不能为空" placeholder="请输入合作银行"  value="<{$configs['screen_finance_data.cooperative_bank_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">家</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">接入合伙人</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_partner_total" lay-verify="required" lay-reqtext="接入合伙人不能为空" placeholder="请输入接入合伙人"  value="<{$configs['screen_finance_data.partner_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">人</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">本月新增申贷用户</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_current_month_loan_user_total" lay-verify="required" lay-reqtext="本月新增申贷用户不能为空" placeholder="请输入本月新增申贷用户"  value="<{$configs['screen_finance_data.current_month_loan_user_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">人</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">本月成交量</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_current_month_pass_total" lay-verify="required" lay-reqtext="本月成交量不能为空" placeholder="请输入本月成交量"  value="<{$configs['screen_finance_data.current_month_pass_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">万</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">累计服务客户</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_service_customer_total" lay-verify="required" lay-reqtext="累计服务客户不能为空" placeholder="请输入累计服务客户"  value="<{$configs['screen_finance_data.service_customer_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">位</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">累计发放贷款总额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_loan_pass_total" lay-verify="required" lay-reqtext="累计发放贷款总额不能为空" placeholder="请输入累计发放贷款总额"  value="<{$configs['screen_finance_data.loan_pass_total']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">万</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">综合业务通过率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_business_pass_ratio" lay-verify="required" lay-reqtext="综合业务通过率不能为空" placeholder="请输入综合业务通过率"  value="<{$configs['screen_finance_data.business_pass_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">资料审核通过率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_data_pass_ratio" lay-verify="required" lay-reqtext="资料审核通过率不能为空" placeholder="请输入资料审核通过率"  value="<{$configs['screen_finance_data.data_pass_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">电审通过率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_ds_pass_ratio" lay-verify="required" lay-reqtext="电审通过率不能为空" placeholder="请输入电审通过率"  value="<{$configs['screen_finance_data.ds_pass_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">贷款审批通过率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_loan_pass_ratio" lay-verify="required" lay-reqtext="贷款审批通过率不能为空" placeholder="请输入贷款审批通过率"  value="<{$configs['screen_finance_data.loan_pass_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">综合逾期率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="screen_finance_data_loan_overdue_ratio" lay-verify="required" lay-reqtext="综合逾期率不能为空" placeholder="请输入综合逾期率"  value="<{$configs['screen_finance_data.loan_overdue_ratio']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0～100 %</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+
+            let url = "<{:admin_api_url('setting/screen')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

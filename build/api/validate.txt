@@ -1,0 +1,34 @@
+<?php
+
+
+namespace app\{{$Module|strtolower}}\validate;
+
+
+use think\Validate;
+
+class {{$Name|camelize|ucfirst}}Validate extends Validate
+{
+
+    protected $rule =   [
+        'id'  => ['require','number'],
+        'ids'  => ['require','array'],
+        'title'  => ['require'],
+    ];
+
+    protected $message  =   [
+        'id.require' => '请选择数据',
+        'id.number' => '选择数据无效',
+        'ids.require' => '请选择数据',
+        'ids.array' => '请选择数据',
+        'title.require' => '标题必填',
+    ];
+
+
+    protected $scene = [
+        'detail'  =>  ['id'],
+        'create'  =>  ['title'],
+        'update'  =>  ['id','title'],
+        'delete'  =>  ['id'],
+    ];
+
+}

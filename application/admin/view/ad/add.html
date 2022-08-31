@@ -1,0 +1,117 @@
+<div class="layui-form layuimini-form" style="padding: 20px">
+
+    <style>
+        .material-list{
+            width: calc(100% - 200px);
+            height: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .material-list .material-row{
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items:center
+        }
+
+
+
+        .material-list .material-row .resource{
+            min-width: 200px;
+            height: 140px;
+            display: flex;
+            flex-direction: row;
+            margin-right: 20px;
+        }
+
+
+        .material-list .material-row .resource img{
+            width: 200px;
+            height: 140px;
+        }
+
+
+        .material-list .material-row .links{
+            display: flex;
+            margin-right: 20px;
+        }
+
+
+        #show-dates{
+            cursor: pointer;
+        }
+
+    </style>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">广告标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空" placeholder="请输入标题" value="" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">位置标识</label>
+        <div class="layui-input-block">
+            <input type="text" name="position" lay-verify="required" lay-reqtext="标识不能为空" placeholder="请输入标识" value="" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">广告类型</label>
+        <div class="layui-input-block">
+            <input type="hidden" id="old_type" value="">
+            <input type="radio" name="type" value="1" lay-filter="type" title="图片" checked>
+            <input type="radio" name="type" value="2" lay-filter="type" title="相册">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">位置宽度</label>
+        <div class="layui-input-block">
+            <input type="number" name="width" lay-verify="required" lay-reqtext="宽度不能为空" placeholder="请输入宽度" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">位置高度</label>
+        <div class="layui-input-block">
+            <input type="number" name="height" lay-verify="required" lay-reqtext="高度不能为空" placeholder="请输入高度" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">素材内容</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn layui-btn-normal image-upload-btn">选择图片</button>
+            <button type="button" class="layui-btn layui-btn-normal images-upload-btn layui-hide">选择多图</button>
+            <div class="material-list">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" placeholder="请输入排序值" value="0" class="layui-input">
+            <tip>请输入排序值，越大越靠前</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" lay-skin="switch" lay-text="显示|隐藏" checked >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-ad-create-submit" id="LAY-ad-create-submit" value="确认">
+    </div>
+
+</div>
+

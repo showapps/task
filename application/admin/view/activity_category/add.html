@@ -1,0 +1,74 @@
+<div class="layui-form layuimini-form" style="padding: 20px">
+    <style>
+        .upload-button{
+            border: #cdcdcd dashed 1px;
+            border-radius: 5px;
+            background-image:url('__IMAGES__/icon/upload-plus-icon.png');
+            background-repeat:no-repeat;
+            background-position: center center;
+            cursor: pointer;
+        }
+
+        .video-upload-button-box,
+        .video-content-row
+        {
+            width: 80px;
+            height: 80px;
+        }
+
+    </style>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">分类名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="请填写分类名称" placeholder="请输入" autocomplete="off" value="" class="layui-input" maxlength="10">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">分类图标</label>
+        <div class="layui-input-block">
+            <div class="upload-button image-btn image-btn-icon" style="width:80px;height: 80px"></div>
+            <div class="image-upload-button-box">
+                <img src="" data-value="" class="image-btn" id="icon-image" alt="" style="cursor: pointer;width:180px;height: 120px;display: none" title="点击更换">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">分类描述</label>
+        <div class="layui-input-inline">
+            <input type="text" name="describe" lay-verify="required" lay-reqtext="请填写分类描述" placeholder="请输入" autocomplete="off" value="" class="layui-input" maxlength="20">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">最小单价</label>
+        <div class="layui-input-inline">
+            <input type="text" name="min_price" lay-verify="required" lay-reqtext="请填写最小单价" placeholder="请输入" autocomplete="off" value="" class="layui-input" min="0.01">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">最少数量</label>
+        <div class="layui-input-inline">
+            <input type="text" name="min_number" lay-verify="required" lay-reqtext="请填写最少数量" placeholder="请输入" autocomplete="off" value="" class="layui-input" min="1">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序字段</label>
+        <div class="layui-input-inline">
+            <input type="number" name="sort" placeholder="请输入排序值" value="0" class="layui-input">
+            <tip>值越大越靠前</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" lay-skin="switch" lay-text="显示|隐藏" checked >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-role-create-submit" id="LAY-role-create-submit" value="确认">
+    </div>
+
+</div>

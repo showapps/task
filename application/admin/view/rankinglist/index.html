@@ -1,0 +1,227 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'rankinglist';
+?>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box"style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">筛选时间</label>
+                            <div class="layui-input-inline" style="min-width: 200px">
+                                <input type="text" id="filters-month" name="filters[months]" autocomplete="off" class="layui-input" readonly style="cursor: pointer;text-align: center" value="<{:date('Y-m')}> - <{:date('Y-m')}>">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">排名类型</label>
+                            <div class="layui-input-inline" style="min-width: 100px">
+                                <select id="filters-type" name="filters[type]">
+                                    <option value="0">全部</option>
+                                    <option value="1">接单</option>
+                                    <option value="2">推广</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+            </div>
+        </script>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+
+        </script>
+        <script type="text/html" id="typeTpl">
+            {{# if(d.type == 1){ }}
+                接单
+            {{# }else if(d.type == 2){ }}
+                推广
+            {{# } }}
+        </script>
+        <script type="text/html" id="userIdTpl">
+            {{d.user.id}}
+        </script>
+        <script type="text/html" id="nickNameTpl">
+            {{d.user.nick_name}}
+        </script>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laydate = layui.laydate,
+            table = layui.table;
+
+        var formSelects = layui.formSelects;
+
+
+        //年月范围
+        laydate.render({
+            elem: '#filters-month'
+            ,type: 'month'
+            ,range: true
+            ,btns: ['confirm']
+        });
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('rankinglist/list')}>",
+            method: 'post',
+            toolbar: '#toolbarDemo',request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'page_size' //每页数据量的参数名，默认：limit
+            },
+            parseData: function(res){ //res 即为原始返回的数据
+                ajax_response_filtr(res,$adminConfig);
+                let datas = [];
+                if(res.data && res.data.length >= 1){
+                    for (let key in res.data){
+                        let data = res.data[key];
+                        data.tool = false;
+                        datas.push(data);
+                    }
+                }
+                return {
+                    "code": res.status == 200 ? 0 : res.status, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.params.pages.total, //解析数据长度
+                    "data": datas //解析数据列表
+                };
+            },
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'type', minWidth: 100, title: '排行类型', templet:"#typeTpl"},
+                {field: 'month', minWidth: 100, title: '月份'},
+                {field: 'index', minWidth: 100, title: '排名'},
+                {field: 'user_id', minWidth: 100, title: '用户ID', templet:"#userIdTpl"},
+                {field: 'nick_name', minWidth: 100, title: '昵称', templet:"#nickNameTpl"},
+                {field: 'achieve', minWidth: 100, title: '达成'},
+                {field: 'reward', minWidth: 100, title: '奖励金额'}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true,
+            loading: true,
+            skin: 'line',
+            //在表格加载完毕后执行的方法
+            done: function (res, curr, count) {
+                $(".exportClick").click(function(e) {
+                    console.log('e',e);
+                    $(".other_menu").toggle();
+                });
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'update') {
+
+                let url = "<{:admin_api_url('rankinglist/update')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '添加黑名单',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['640px', '400px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                laydate.render({
+                                    trigger: 'click',
+                                    elem: '#blacklist_end_dt' //指定元素
+                                });
+
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-blacklist-mod-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+
+                                            obj.update({content: field.content,end_dt: field.end_dt,tool:true});
+                                            layer.close(index); //关闭弹层
+                                            success_msg('更新成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+
+                return false;
+
+            }
+        });
+
+    });
+</script>
+
+<{include file="public/footer" /}>

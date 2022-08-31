@@ -1,0 +1,22 @@
+<div class="audit_box layui-form layuimini-form" style="padding: 20px;">
+
+    <input type="hidden" name="id" value="<{$info.id}>">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">审核状态:</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="100" lay-filter="status"  title="通过" checked>
+            <input type="radio" name="status" value="2" lay-filter="status"  title="驳回">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text reasons_box" style="display: none">
+        <label class="layui-form-label required">审核备注:</label>
+        <div class="layui-input-block">
+            <textarea name="reasons" placeholder="请输入备注内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-wallet-withdraw-audit-submit" id="LAY-wallet-withdraw-audit-submit" value="确认">
+    </div>
+
+</div>

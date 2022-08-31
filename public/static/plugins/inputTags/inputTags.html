@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="layui/src/css/layui.css">
+</head>
+<body>
+  <div class="tags" id="tags">
+    <input type="text" name="" id="inputTags" placeholder="回车生成标签" autocomplete="off">
+  </div>
+  <script type="text/javascript" src="layui/src/layui.js"></script>
+  <script type="text/javascript">
+    layui.use(['inputTags'],function(){
+      var inputTags = layui.inputTags;
+      inputTags.render({
+        elem:'#inputTags',
+        content: ['标题一','标题二'],
+        aldaBtn: true,
+        done: function(value){
+          console.log(value)
+        }
+      })      
+      
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><{:dbConfig('site.name','')}>-平台管理系统</title>
+    <link rel="stylesheet" href="__LAYUI_MINI__/lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="__LAYUI_MINI__/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="__LAYUI_MINI__/css/public.css" media="all">
+    <link rel="stylesheet" href="__PLUGINS__/formSelects/dist/formSelects-v4.css?v=<{:static_version()}>" media="all">
+    <{include file="public/script" /}>
+    <script src="__LAYUI_MINI__/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/functions.js?v=<{:static_version()}>" charset="utf-8"></script>
+    <script src="__PLUGINS__/formSelects/dist/formSelects-v4.js?v=<{:static_version()}>" charset="utf-8"></script>
+    <script>
+        // 判断不在 iframe
+        if (top.location.href == self.location){
+            top.location.href = "<{:admin_url('index')}>";
+        }
+    </script>
+    <style>
+        .layui-layer-setwin .layui-layer-close {
+            background-position: 1px -40px!important;
+            cursor: pointer!important;
+        }
+    </style>
+</head>
+<body>

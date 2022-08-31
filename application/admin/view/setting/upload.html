@@ -1,0 +1,147 @@
+<{include file="public/header" /}>
+<style>
+
+    .layuimini-form  .layui-form-item  .required:after {
+        content: '*';
+        color: red;
+        position: absolute;
+        margin-left: 4px;
+        font-weight: bold;
+        line-height: 1.8em;
+        top: 6px;
+        right: 5px;
+    }
+
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">OSS上传</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">access_id</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_access_id" lay-verify="required" lay-reqtext="access_id不能为空" placeholder="请输入access_id"  value="<{$configs['oss_access_id']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">access_secret</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="password" name="oss_access_secret" lay-verify="required" lay-reqtext="access_secret不能为空" placeholder="请输入access_secret"  value="<{$configs['oss_access_secret']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">endpoint</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_endpoint" lay-verify="required" lay-reqtext="endpoint不能为空" placeholder="请输入endpoint"  value="<{$configs['oss_endpoint']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">bucket</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_bucket" lay-verify="required" lay-reqtext="bucket不能为空" placeholder="请输入bucket"  value="<{$configs['oss_bucket']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">域名前缀</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_domain_header" lay-verify="required" lay-reqtext="域名前缀不能为空" placeholder="请输入域名前缀"  value="<{$configs['oss_domain_header']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">图片最大(Kb)</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_image_max_size" lay-verify="required" lay-reqtext="图片最大不能为空" placeholder="请输入图片最大"  value="<{$configs['oss_image_max_size']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">图片后缀</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_image_allow_exts" lay-verify="required" lay-reqtext="图片后缀不能为空" placeholder="请输入图片后缀"  value="<{$configs['oss_image_allow_exts']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">视频最大(Kb)</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_video_max_size" lay-verify="required" lay-reqtext="视频最大不能为空" placeholder="请输入视频最大"  value="<{$configs['oss_video_max_size']}>" class="layui-input" maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">视频后缀</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_video_allow_exts" lay-verify="required" lay-reqtext="视频后缀不能为空" placeholder="请输入视频后缀"  value="<{$configs['oss_video_allow_exts']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">音频最大(Kb)</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_voice_max_size" lay-verify="required" lay-reqtext="音频最大不能为空" placeholder="请输入音频最大"  value="<{$configs['oss_voice_max_size']}>" class="layui-input" maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">音频后缀</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="oss_voice_allow_exts" lay-verify="required" lay-reqtext="音频后缀不能为空" placeholder="请输入音频后缀"  value="<{$configs['oss_voice_allow_exts']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            upload = layui.upload,
+            miniTab = layui.miniTab;
+
+        form.render();
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            let url = "<{:admin_api_url('setting/upload')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

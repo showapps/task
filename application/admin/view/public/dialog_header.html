@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人人任务-平台管理系统</title>
+    <link rel="stylesheet" href="__LAYUI_MINI__/lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="__LAYUI_MINI__/css/public.css" media="all">
+    <{include file="public/script" /}>
+    <script src="__LAYUI_MINI__/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="__LAYUI_MINI__/functions.js?v=1" charset="utf-8"></script>
+    <script>
+        // 判断不在 iframe
+        if (top.location.href == self.location){
+            top.location.href = "<{:admin_url('index')}>";
+        }
+    </script>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>

@@ -1,0 +1,558 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'ad';
+?>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box" style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索内容</label>
+                            <div class="layui-input-inline" style="min-width: 400px">
+                                <input type="text" name="filters[search_text]" autocomplete="off" class="layui-input" placeholder="标题、位置名称">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'create')}>
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <{/if}>
+            </div>
+        </script>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">详情</a>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'update')}>
+                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="update">编辑</a>
+            <{/if}>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'delete')}>
+                <!--
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+                -->
+            <{/if}>
+        </script>
+
+        <script type="text/html" id="typeTextTpl">
+            {{#  if(d.type == 1){ }}
+            图片
+            {{#  }else if(d.type == 2){ }}
+            相册
+            {{#  } }}
+        </script>
+
+        <script type="text/html" id="statusTextTpl">
+            {{#  if(d.status == 1){ }}
+            显示
+            {{#  }else{ }}
+            隐藏
+            {{#  } }}
+        </script>
+    </div>
+</div>
+
+<script type="text/html" id="content-row-template">
+    <div class="material-row" data-content-index="--INDEX--">
+        <div class="resource">
+            --RESOURCE-HTML--
+            <input type="hidden" value="--RESOURCE-URL--">
+        </div>
+        --LINKS--
+        <div class="close"><button type="button" class="layui-btn layui-btn-danger" onclick="delete_content_row('--INDEX--')">删除</button></div>
+    </div>
+</script>
+
+<script type="text/html" id="content-row-links-template">
+    <div class="links">
+        <div class="link-method">
+            <select style="min-width: 200px">
+                <option value="">跳转方式</option>
+                <optgroup label="站内">
+                    <option value="mobile">移动端</option>
+                </optgroup>
+                <optgroup label="站外">
+                    <option value="http">HTTP</option>
+                    <option value="https">HTTPS</option>
+                </optgroup>
+            </select>
+        </div>
+        <input type="text" placeholder="请输入" value="" class="layui-input link-url" style="min-width: 300px">
+    </div>
+</script>
+
+<script type="text/html" id="content-row-image-template">
+    <img src="--RESOURCE-URL--" alt="">
+</script>
+
+<script type="text/html" id="content-row-video-template">
+    <video width="180" height="120" data-value="--RESOURCE-URL--" controls="controls">
+        <source src="--RESOURCE-URL--"/>
+        <embed width="180" height="120" src="--RESOURCE-URL--" />
+        </object>
+    </video>
+</script>
+
+<script>
+
+    var tag_colors = ['','layui-bg-orange','layui-bg-green','layui-bg-cyan','layui-bg-blue','layui-bg-black','layui-bg-gray'];
+
+    layui.use(['form', 'table', 'upload', 'laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            upload = layui.upload,
+            table = layui.table,
+            laydate = layui.laydate;
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('a/list')}>"
+            <{include file="public/table_common" /}>,
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'title', title: '广告标题'},
+                {field: 'position', title: '位置标识'},
+                {field: 'type', title: '类型', templet:"#typeTextTpl"},
+                {field: 'width', title: '宽度'},
+                {field: 'height', title: '高度'},
+                {field: 'created_at', width: 200, title: '发布时间', sort: true},
+                {field: 'status', width: 110, title: '状态', templet:"#statusTextTpl", sort: true},
+                {field: 'tool',title: '操作', minWidth: 200, fixed:'right',templet:'#currentTableBar', align: "center"}
+            ]]
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                let url = "<{:admin_api_url('a/create')}>";
+                $.post(url,{'_method':'get'},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '添加广告',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                $('#old_type').val($('input[name="type"]:checked').val());
+
+                                form.on('radio(type)', function(item){
+
+                                    //过滤重复选择
+                                    let old_type = $('#old_type').val();
+                                    if(old_type == item.value){
+                                        return false;
+                                    }
+
+                                    $('#old_type').val(item.value);
+                                    if(item.value == '1'){
+                                        $('.image-upload-btn').removeClass('layui-hide');
+                                        $('.images-upload-btn').addClass('layui-hide');
+                                    }else if(item.value == '2'){
+                                        $('.image-upload-btn').addClass('layui-hide');
+                                        $('.images-upload-btn').removeClass('layui-hide');
+                                    }
+
+                                    $('.material-list .material-row').remove();
+
+                                });
+
+                                //单图上传
+                                upload.render({
+                                    elem: '.image-upload-btn' //绑定元素
+                                    ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+                                    ,accept: 'images'
+                                    ,done: function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            let data = res.data[0];
+                                            let index = 0;
+                                            let resource_url = data.url;
+                                            let row_template = $('#content-row-template').text();
+                                            let image_template = $('#content-row-image-template').text();
+                                            let links_template = $('#content-row-links-template').text();
+
+                                            image_html = image_template.replace(/--RESOURCE-URL--/g,resource_url);
+                                            links_html = links_template.replace(/--INDEX--/g,index);
+                                            row_html = row_template.replace(/--RESOURCE-URL--/g,resource_url)
+                                                .replace(/--RESOURCE-HTML--/g,image_html)
+                                                .replace(/--INDEX--/g,index)
+                                                .replace(/--LINKS--/g,links_html);
+
+                                            $('.material-list').html(row_html);
+                                            form.render();
+
+                                            success_msg("上传成功");
+                                        }
+                                    }
+                                    ,error: function(){
+                                        error_msg('上传失败');
+                                    }
+                                });
+
+
+                                //多图上传
+                                upload.render({
+                                    elem: '.images-upload-btn' //绑定元素
+                                    ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+                                    ,accept: 'images'
+                                    ,done: function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            let data = res.data[0];
+                                            let last_row = $(".material-list .material-row:last");
+                                            let index = 0;
+                                            if(last_row.length >= 1){
+                                                index = parseInt(last_row.attr('data-content-index')) + 1;
+                                            }
+
+                                            let resource_url = data.url;
+                                            let row_template = $('#content-row-template').text();
+                                            let image_template = $('#content-row-image-template').text();
+                                            let links_template = $('#content-row-links-template').text();
+
+                                            image_html = image_template.replace(/--RESOURCE-URL--/g,resource_url);
+                                            links_html = links_template.replace(/--INDEX--/g,index);
+                                            row_html = row_template.replace(/--RESOURCE-URL--/g,resource_url)
+                                                .replace(/--RESOURCE-HTML--/g,image_html)
+                                                .replace(/--INDEX--/g,index)
+                                                .replace(/--LINKS--/g,links_html);
+
+                                            $('.material-list').append(row_html);
+                                            form.render();
+
+                                            success_msg("上传成功");
+                                        }
+                                    }
+                                    ,error: function(){
+                                        error_msg('上传失败');
+                                    }
+                                });
+
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-ad-create-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+
+                                    var field = data.field; //获取提交的字段
+                                    let type = field.type;
+                                    field.status = field.status == 'on' ? 1 : 2;
+
+                                    //检查素材
+                                    let materialList = $('.material-list .material-row');
+                                    if(materialList.length < 1){
+                                        let typeList = {1: '图片',2: '图片'};
+                                        error_msg('请上传' + typeList[type]);return false;
+                                    }
+
+                                    //组装内容
+                                    let contents = [];
+                                    materialList.each(function () {
+                                        let _this = $(this);
+
+                                        let content = {};
+                                        content.resource = _this.find('.resource input').val();
+                                        if(type == '1' || type == '2'){
+                                            content.links = {
+                                                method: _this.find('.link-method select').val(),
+                                                url: _this.find('.link-url').val()
+                                            }
+                                        }
+
+                                        contents.push(content);
+                                    });
+
+                                    field.content = contents;
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+
+                                            success_msg('添加成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            set_list_filters(data.field);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                let url = "<{:admin_api_url('a/detail')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '广告详情',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                form.render();
+                            }
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if (obj.event === 'update') {
+
+                let url = "<{:admin_api_url('a/update')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '广告编辑',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                //单图上传
+                                upload.render({
+                                    elem: '.image-upload-btn' //绑定元素
+                                    ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+                                    ,accept: 'images'
+                                    ,done: function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            let data = res.data[0];
+                                            let index = 0;
+                                            let resource_url = data.url;
+                                            let row_template = $('#content-row-template').text();
+                                            let image_template = $('#content-row-image-template').text();
+                                            let links_template = $('#content-row-links-template').text();
+
+                                            image_html = image_template.replace(/--RESOURCE-URL--/g,resource_url);
+                                            links_html = links_template.replace(/--INDEX--/g,index);
+                                            row_html = row_template.replace(/--RESOURCE-URL--/g,resource_url)
+                                                .replace(/--RESOURCE-HTML--/g,image_html)
+                                                .replace(/--INDEX--/g,index)
+                                                .replace(/--LINKS--/g,links_html);
+
+                                            $('.material-list').html(row_html);
+                                            form.render();
+
+                                            success_msg("上传成功");
+                                        }
+                                    }
+                                    ,error: function(){
+                                        error_msg('上传失败');
+                                    }
+                                });
+
+
+                                //多图上传
+                                upload.render({
+                                    elem: '.images-upload-btn' //绑定元素
+                                    ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+                                    ,accept: 'images'
+                                    ,done: function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            let data = res.data[0];
+                                            let last_row = $(".material-list .material-row:last");
+                                            let index = 0;
+                                            if(last_row.length >= 1){
+                                                index = parseInt(last_row.attr('data-content-index')) + 1;
+                                            }
+
+                                            let resource_url = data.url;
+                                            let row_template = $('#content-row-template').text();
+                                            let image_template = $('#content-row-image-template').text();
+                                            let links_template = $('#content-row-links-template').text();
+
+                                            image_html = image_template.replace(/--RESOURCE-URL--/g,resource_url);
+                                            links_html = links_template.replace(/--INDEX--/g,index);
+                                            row_html = row_template.replace(/--RESOURCE-URL--/g,resource_url)
+                                                .replace(/--RESOURCE-HTML--/g,image_html)
+                                                .replace(/--INDEX--/g,index)
+                                                .replace(/--LINKS--/g,links_html);
+
+                                            $('.material-list').append(row_html);
+                                            form.render();
+
+                                            success_msg("上传成功");
+                                        }
+                                    }
+                                    ,error: function(){
+                                        error_msg('上传失败');
+                                    }
+                                });
+
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-ad-update-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+
+                                    var field = data.field; //获取提交的字段
+                                    let type = $('#type').val();
+                                    field.status = field.status == 'on' ? 1 : 2;
+
+                                    //检查素材
+                                    let materialList = $('.material-list .material-row');
+                                    if(materialList.length < 1){
+                                        let typeList = {1: '图片',2: '图片'};
+                                        error_msg('请上传' + typeList[type]);return false;
+                                    }
+
+                                    //组装内容
+                                    let contents = [];
+                                    materialList.each(function () {
+                                        let _this = $(this);
+
+                                        let content = {};
+                                        content.resource = _this.find('.resource input').val();
+                                        if(type == '1' || type == '2'){
+                                            content.links = {
+                                                method: _this.find('.link-method select').val(),
+                                                url: _this.find('.link-url').val()
+                                            }
+                                        }
+
+                                        contents.push(content);
+                                    });
+
+                                    field.content = contents;
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+
+                                            success_msg('编辑成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if (obj.event === 'delete') {
+
+                layer.confirm('您真的要删除这个广告吗？', function (index) {
+                    layer.close(index);
+                    let url = "<{:admin_api_url('a/delete')}>";
+                    $.post(url,{id: data.id},function(res){
+                        ajax_response_filtr(res,$adminConfig);
+                        if(res.status == 200){
+                            obj.del();
+                            success_msg('操作成功');
+                        }
+                    },'json');
+                });
+                return false;
+            }
+        });
+
+    });
+
+
+    function delete_content_row(index) {
+        $('.material-list .material-row[data-content-index="'+index+'"]').remove();
+    }
+</script>
+
+<{include file="public/footer" /}>

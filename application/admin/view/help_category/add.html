@@ -1,0 +1,27 @@
+<div class="layui-form layuimini-form" style="padding: 20px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">分类名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="请填写分类名称" placeholder="请输入" autocomplete="off" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序字段</label>
+        <div class="layui-input-inline">
+            <input type="number" name="sort" placeholder="请输入排序值" value="0" class="layui-input">
+            <tip>值越大越靠前</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" name="status" lay-skin="switch" lay-text="显示|隐藏" checked >
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-role-create-submit" id="LAY-role-create-submit" value="确认">
+    </div>
+
+</div>

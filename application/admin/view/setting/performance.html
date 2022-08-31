@@ -1,0 +1,74 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">区域代理</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">业绩比例</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="district_agency_commission" lay-verify="required|commission" min="0" max="100" maxlength="3" lay-reqtext="区域代理业绩比例不能为空" placeholder="请输入区域代理业绩比例"  value="<{$configs['district_agency.commission']}>" onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">% 小提示：所属区域 代理、企业会员、区域代理、供应商、大区代理 开通费用。</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">大区代理</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">业绩比例</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="big_agency_commission" lay-verify="required|commission" min="0" max="100" maxlength="3" lay-reqtext="大区代理业绩比例不能为空" placeholder="请输入大区代理业绩比例"  value="<{$configs['big_agency.commission']}>" onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">% 小提示：所属大区 代理、企业会员、区域代理、供应商、大区代理 开通费用。</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        form.verify({
+            commission: function(value, item){
+                if(value < 0 || value > 100){
+                    return '只能输入 0 ~ 100 之内的整数';
+                }
+                if(value.indexOf('.') != -1){
+                    return '只能输入 0 ~ 100 之内的整数';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            let url = "<{:admin_api_url('setting/performance')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

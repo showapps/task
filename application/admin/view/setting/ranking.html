@@ -1,0 +1,216 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+    .row-index-input{
+        border: none;
+    }
+</style>
+<div class="layuimini-container" id="app">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">任务榜设置</blockquote>
+            <div class="layui-form-item" style="margin-bottom: 0px;">
+                <div class="layui-input-block" style="margin-left: 22px!important;">
+                    <button class="layui-btn layui-btn-danger" @click="taskAdd()">添加</button>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;padding-top: 10px">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <th>排名</th>
+                    <th>奖励(元)</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody class="task-tbody-box">
+                        <tr v-for="(value, index) in taskList">
+                            <td>
+                                <div class="row-index">
+                                    <div class="layui-input-inline row-index-box">
+                                        {{index + 1}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row-money">
+                                    <div class="layui-input-inline row-money-box">
+                                        <input type="number" v-model="taskList[index]" placeholder="请输入奖励金额"  class="layui-input row-money-input">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tools-row">
+                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" @click="taskDel(index)">删除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <blockquote class="layui-elem-quote">推广榜设置</blockquote>
+            <div class="layui-form-item" style="margin-bottom: 0px;">
+                <div class="layui-input-block" style="margin-left: 22px!important;">
+                    <button class="layui-btn layui-btn-danger" @click="spreadAdd()">添加</button>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;padding-top: 10px">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <th>排名</th>
+                    <th>奖励(元)</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody class="task-tbody-box">
+                        <tr v-for="(value, index) in spreadList">
+                            <td>
+                                <div class="row-index">
+                                    <div class="layui-input-inline row-index-box">
+                                        {{index + 1}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="row-money">
+                                    <div class="layui-input-inline row-money-box">
+                                        <input type="number" v-model="spreadList[index]" placeholder="请输入奖励金额"  class="layui-input row-money-input">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tools-row">
+                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" @click="spreadDel(index)">删除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" @click="submit">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="__PLUGINS__/vue.min.js"></script>
+<script>
+
+    var $;
+    var _Vue = Vue;
+
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+        $ = layui.jquery;
+
+        var Vue = new _Vue({
+            el: '#app',
+            data: {
+                taskList: [],
+                spreadList: [],
+            },
+            created: function(){
+
+                //初始化 task
+                this.taskList = JSON.parse('<{$configs.ranking_tasks}>');
+                if((!this.taskList) || this.taskList.length < 1){
+                    this.taskList.push('0');
+                }
+
+                //初始化 spread
+                this.spreadList = JSON.parse('<{$configs.ranking_spreads}>');
+                if((!this.spreadList) || this.spreadList.length < 1){
+                    this.spreadList.push('0');
+                }
+
+            },
+            methods: {
+                taskAdd(){
+
+                    if(this.taskList.length >= 50){
+                        error_msg('最多添加50项！');
+                        return;
+                    }
+
+                    this.taskList.push('0');
+                },
+                taskDel(index){
+
+                    if(this.taskList.length == 1){
+                        error_msg('最少保留1项！');
+                        return;
+                    }
+
+                    this.taskList.splice(index,1);
+                },
+                spreadAdd(){
+
+                    if(this.spreadList.length >= 50){
+                        error_msg('最多添加50项！');
+                        return;
+                    }
+
+                    this.spreadList.push('0');
+                },
+                spreadDel(index){
+
+                    if(this.spreadList.length == 1){
+                        error_msg('最少保留1项！');
+                        return;
+                    }
+
+                    this.spreadList.splice(index,1);
+                },
+                submit(){
+
+                    if(this.taskList.length < 1){
+                        error_msg('任务榜最少配置1项！');
+                        return;
+                    }
+
+                    if(this.taskList.length > 50){
+                        error_msg('任务榜最多配置50项！');
+                        return;
+                    }
+
+                    if(this.spreadList.length < 1){
+                        error_msg('推广榜最少配置1项！');
+                        return;
+                    }
+
+                    if(this.spreadList.length > 50){
+                        error_msg('推广榜最多配置50项！');
+                        return;
+                    }
+
+                    let url = "<{:admin_api_url('setting/ranking')}>";
+                    $.post(url,{ranking_tasks:this.taskList,ranking_spreads:this.spreadList},function(res){
+                        ajax_response_filtr(res,$adminConfig);
+                        if(res.status == 200){
+                            layer.msg('操作成功', {
+                                time:1500
+                            }, function () {
+                                location.reload()
+                            });
+                        }
+                    },'json');
+
+                }
+            }
+        });
+    });
+
+</script>
+<{include file="public/footer" /}>

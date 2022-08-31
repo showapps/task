@@ -1,0 +1,146 @@
+<div class="layui-form layuimini-form detail_box">
+
+    <style>
+
+        .detail_box{
+            padding: 20px
+        }
+
+        .detail_box input{
+            border: none
+        }
+
+        .material-list{
+            width: calc(100% - 200px);
+            height: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .material-list .material-row{
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items:center
+        }
+
+
+        .material-list .material-row .resource{
+            min-width: 200px;
+            height: 140px;
+            display: flex;
+            flex-direction: row;
+            margin-right: 20px;
+        }
+
+
+        .material-list .material-row .resource img{
+            width: 200px;
+            height: 140px;
+        }
+
+
+        .material-list .material-row .links{
+            display: flex;
+            margin-right: 20px;
+        }
+
+
+        #show-dates{
+            cursor: pointer;
+        }
+
+    </style>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告标题</label>
+        <div class="layui-input-block">
+            <input type="text" disabled value="<{$info.title}>" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置标识</label>
+        <div class="layui-input-block">
+            <input type="text" disabled value="<{$info.position}>" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告类型</label>
+        <div class="layui-input-block type-box">
+            <?php $type_list = [1=>'图片',2=>'相册',3=>'视频'];?>
+            <input type="text" disabled value="<{$type_list[$info['type']]}>" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置宽度</label>
+        <div class="layui-input-block">
+            <input type="number" disabled value="<{$info.width}>" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">位置高度</label>
+        <div class="layui-input-block">
+            <input type="number" disabled value="<{$info.height}>" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">素材内容</label>
+        <div class="layui-input-block">
+            <div class="material-list">
+                <?php $contents = in_array($info['type'],[1,3]) ? [$info['content']] : $info['content'];?>
+                <?php $link_method_list = ['mobile'=>'移动端','http'=>'HTTP','https'=>'HTTPS']; ?>
+                <{volist name="$contents" id="row"}>
+                    <?php $index = $key;?>
+                    <div class="material-row" data-content-index="<{$index}>">
+                        <div class="resource">
+
+                            <{if in_array($info['type'],[1,2]) }>
+                                <img src="<{$row.resource}>" alt="">
+                            <{else if $info['type'] == 3/}>
+                                <video width="180" height="120" data-value="<{$row.resource}>" controls="controls">
+                                    <source src="<{$row.resource}>"/>
+                                    <embed width="180" height="120" src="<{$row.resource}>" />
+                                    </object>
+                                </video>
+                            <{/if}>
+                        </div>
+
+                        <{if isset($row['links']) && $row['links'] }>
+                            <div class="links">
+                                <div class="link-method">
+                                    <input type="text" disabled value="<{$link_method_list[$row['links']['method']]}>" class="layui-input link-url">
+                                </div>
+                                <input type="text" disabled value="<{$row.links.url}>" class="layui-input link-url" style="min-width: 400px">
+                            </div>
+                        <{/if}>
+                    </div>
+
+                <{/volist}>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告排序</label>
+        <div class="layui-input-block">
+            <input type="number" value="<{$info.sort}>" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">广告状态</label>
+        <div class="layui-input-block">
+            <?php $status_list = [1=>'显示',2=>'不显示'];?>
+            <input type="text" value="<{$status_list[$info['status']]}>" class="layui-input">
+        </div>
+    </div>
+
+</div>

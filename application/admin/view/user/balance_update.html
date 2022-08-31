@@ -1,0 +1,37 @@
+<div class="audit_box layui-form layuimini-form" style="padding: 20px;">
+
+    <input type="hidden" name="id" value="<{$info.id}>">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">当前余额:</label>
+        <div class="layui-input-inline">
+            <input type="number" value="<{:fen_to_float($info['balance'])}>" class="layui-input" readonly style="border: none">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">变动类型:</label>
+        <div class="layui-input-block merchant_level_box">
+            <input type="radio" name="set_type" value="1" title="增加" checked>
+            <input type="radio" name="set_type" value="2" title="减少">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">变动金额:</label>
+        <div class="layui-input-inline">
+            <input type="number" name="money" value="" lay-verify="required" lay-reqtext="变动金额不能为空" placeholder="请输入变动金额" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label required">变动说明:</label>
+        <div class="layui-input-block">
+            <textarea name="describe" lay-verify="required" lay-reqtext="变动说明不能为空" placeholder="请输入变动说明" class="layui-textarea" maxlength="20"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-balance-update-submit" id="LAY-balance-update-submit" value="确认">
+    </div>
+
+</div>

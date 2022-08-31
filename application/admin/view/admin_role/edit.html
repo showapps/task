@@ -1,0 +1,14 @@
+<div class="layui-form layuimini-form" style="padding: 20px">
+    <input type="hidden" name="id" value="<{$info.id}>">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="请填写角色名称" placeholder="请填写" autocomplete="off" value="<{$info.title}>" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-role-update-submit" id="LAY-role-update-submit" value="确认">
+    </div>
+
+</div>

@@ -1,0 +1,236 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'finance';
+?>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box" style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索内容</label>
+                            <div class="layui-input-inline" style="min-width: 400px">
+                                <input type="text" name="filters[search_text]" autocomplete="off" class="layui-input" placeholder="ID/姓名/用户名/昵称/手机号">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">状态过滤</label>
+                            <div class="layui-input-inline" style="min-width: 450px">
+                                <input type="radio" name="filters[status]" value="0" title="全部" checked>
+                                <input type="radio" name="filters[status]" value="1" title="待处理">
+                                <input type="radio" name="filters[status]" value="100" title="已完成">
+                                <input type="radio" name="filters[status]" value="2" title="已驳回/失败">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+
+        </script>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">详情</a>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'audit')}>
+                {{#  if(d.status == 1){ }}
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="audit">审核</a>
+                {{#  } }}
+            <{/if}>
+
+        </script>
+
+        <script type="text/html" id="userNameTextTpl">
+            {{d.user.user_name}}
+        </script>
+        <script type="text/html" id="trueNameTextTpl">
+            {{d.user.true_name}}
+        </script>
+        <script type="text/html" id="nickNameTextTpl">
+            {{d.user.nick_name}}
+        </script>
+        <script type="text/html" id="typeTextTpl">
+            {{#  if(d.account_type == 1){ }}
+            支付宝
+            {{#  }else if(d.account_type == 2){ }}
+            微信余额
+            {{#  } }}
+        </script>
+        <script type="text/html" id="statusTextTpl">
+            {{#  if(d.status == 1){ }}
+            待处理
+            {{#  }else if(d.status == 2){ }}
+            提现驳回/失败
+            {{#  }else if(d.status == 100){ }}
+            已完成
+            {{#  } }}
+        </script>
+    </div>
+</div>
+
+<script>
+    var $;
+    layui.use(['form', 'table'], function () {
+        $ = layui.jquery;
+        var form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('wallet/withdraw/list')}>"
+            <{include file="public/table_common" /}>,
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'trade_no', title: '交易编号', minWidth: 200},
+                {field: 'true_name', title: '姓名', templet:"#trueNameTextTpl"},
+                {field: 'nick_name', title: '昵称', templet:"#nickNameTextTpl"},
+                {field: 'type', title: '收款类型', templet:"#typeTextTpl"},
+                {field: 'money', title: '提现金额'},
+                {field: 'actual_amount', title: '到账金额'},
+                {field: 'service_charge_rate', title: '手续费费率'},
+                {field: 'service_charge', title: '手续费金额'},
+                {field: 'status', title: '提现状态', templet:"#statusTextTpl"},
+                {field: 'updated_at', width: 200, title: '更新时间', sort: true},
+                {field: 'tool',title: '操作', minWidth: 200, fixed:'right',templet:'#currentTableBar', align: "center"}
+            ]]
+        });
+
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            set_list_filters(data.field);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                let url = "<{:admin_api_url('wallet/withdraw/detail')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '提现详情',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                form.render();
+                            }
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if (obj.event === 'audit') {
+
+                let url = "<{:admin_api_url('wallet/withdraw/audit')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '提现审核',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['640px', '400px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                form.on('radio(status)', function(data){
+                                    if(data.value == '100'){
+                                        $('.reasons_box').hide();
+                                    }else{
+                                        $('.reasons_box').show();
+                                    }
+                                });
+                                form.render();
+                            },
+                            yes: function(index, layero){
+                                let submitID = 'LAY-wallet-withdraw-audit-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+                                    field.status = field.status == 100 ? 100 : 2;
+
+                                    //通过
+                                    if(field.status == '100'){
+                                        field.reasons = '';
+                                    }else{
+                                        if(!field.reasons){
+                                            error_msg('备注必填');return;
+                                        }
+                                    }
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+                                            layer.close(index); //关闭弹层
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+                return false;
+            }
+        });
+
+    });
+</script>
+
+<{include file="public/footer" /}>

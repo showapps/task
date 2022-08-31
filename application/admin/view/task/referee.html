@@ -1,0 +1,24 @@
+<div class="layui-form layuimini-form" style="padding: 20px;">
+    <input type="hidden" name="id" value="<{$info.id}>">
+    <div class="layui-row">
+        <div class="layui-col-md12 layui-col-lg12">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">审核状态:</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="商家胜诉" checked>
+                    <input type="radio" name="type" value="2" title="接单者胜诉">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label required">审核备注:</label>
+                <div class="layui-input-inline" style="min-width: 320px">
+                    <textarea name="reasons" lay-verify="required" lay-reqtext="备注内容为空" placeholder="请输入备注内容" class="layui-textarea" maxlength="50"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <input type="button" lay-submit lay-filter="LAY-task-referee-submit" id="LAY-task-referee-submit" value="确认">
+        </div>
+    </div>
+
+</div>

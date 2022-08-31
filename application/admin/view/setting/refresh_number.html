@@ -1,0 +1,213 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+    .row-index-input{
+        border: none;
+    }
+    #app .red{
+        color: red;
+    }
+</style>
+<div class="layuimini-container" id="app">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item" style="margin-bottom: 0px;">
+                <div class="layui-input-block" style="margin-left: 22px!important;">
+                    <button class="layui-btn layui-btn-danger" @click="add()">添加</button>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;padding-top: 10px">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="80">
+                        <col>
+                        <col width="80">
+                        <col width="80">
+                        <col width="100">
+                    </colgroup>
+                    <thead>
+                    <th>数据索引</th>
+                    <th><span class="red">* </span>标题字段</th>
+                    <th><span class="red">* </span>刷新数量</th>
+                    <th><span class="red">* </span>原价(元)</th>
+                    <th><span class="red">* </span>现价(元)</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody class="tbody-box">
+                    <tr v-for="(item, index) in list">
+                        <td>
+                            <div class="row-index">
+                                <div class="layui-input-inline row-index-box">
+                                    {{index + 1}}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row-title">
+                                <div class="layui-input-inline row-title-box" style="width: 100%">
+                                    <input type="text" v-model="item.title" placeholder="请输入标题"  class="layui-input row-title-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row-number">
+                                <div class="layui-input-inline row-number-box">
+                                    <input type="text" v-model="item.number" placeholder="请输入刷新数量"  class="layui-input row-number-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row-original_price">
+                                <div class="layui-input-inline row-original_price-box">
+                                    <input type="text" v-model="item.original_price" placeholder="请输入原价"  class="layui-input row-original_price-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row-price">
+                                <div class="layui-input-inline row-price-box">
+                                    <input type="text" v-model="item.price" placeholder="请输入现价"  class="layui-input row-price-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="tools-row">
+                                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" @click="del(index)">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" @click="submit">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="__PLUGINS__/vue.min.js"></script>
+<script>
+
+    var $;
+
+    var Vue = new Vue({
+        el: '#app',
+        data: {
+            list: [],
+        },
+        created: function(){
+            this.getList();
+        },
+        updated: function(){
+            layui.use(['form','miniTab'], function () {
+                var form = layui.form,
+                    layer = layui.layer,
+                    miniTab = layui.miniTab;
+                $ = layui.jquery;
+                form.render();
+            });
+        },
+        methods: {
+            getList(){
+
+                let _this = this;
+                let url = "<{:admin_api_url('setting/refresh_number/list')}>";
+                $.post(url,{},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        _this.list = res.data;
+                        console.log('_this.list',_this.list)
+                    }
+                },'json');
+
+            },
+            add(){
+
+                if(this.list.length >= 50){
+                    error_msg('最多添加50项！');
+                    return;
+                }
+
+                this.list.push({
+                    title: '',
+                    number: '',
+                    original_price: '',
+                    price: '',
+                });
+            },
+            del(index){
+                this.list.splice(index,1);
+            },
+            submit(){
+
+                if(this.list.length > 50){
+                    error_msg('最多设置50项！');
+                    return;
+                }
+
+                if(this.list && this.list.length >= 1){
+                    for (let index in this.list){
+                        let item = this.list[index];
+                        let indexTitle = index;
+                        indexTitle ++;
+
+                        if((!item.title) || item.title == ''){
+                            error_msg('第'+indexTitle+'项必须输入标题！');
+                            return;
+                        }
+
+                        if((!item.number) || item.number == ''){
+                            error_msg('第'+indexTitle+'项必须输入刷新数量！');
+                            return;
+                        }
+
+                        if(item.number < 1 || item.number > 999999){
+                            error_msg('第'+indexTitle+'项刷新数量必须在 1 ~ 999999 之间！');
+                            return;
+                        }
+
+                        if((!item.original_price) || item.original_price == ''){
+                            error_msg('第'+indexTitle+'项必须输入原价！');
+                            return;
+                        }
+
+                        if(item.original_price < 0.01 || item.original_price > 999999){
+                            error_msg('第'+indexTitle+'项原价必须在 0.01 ~ 999999 之间！');
+                            return;
+                        }
+
+                        if((!item.price) || item.price == ''){
+                            error_msg('第'+indexTitle+'项必须输入现价！');
+                            return;
+                        }
+
+                        if(item.price < 0.01 || item.price > 999999){
+                            error_msg('第'+indexTitle+'项现价必须在 0.01 ~ 999999 之间！');
+                            return;
+                        }
+                    }
+                }
+
+                let url = "<{:admin_api_url('setting/refresh_number/update')}>";
+                $.post(url,{datas:this.list},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        layer.msg('操作成功', {
+                            time:1500
+                        }, function () {
+                            location.reload()
+                        });
+                    }
+                },'json');
+
+            }
+        }
+    });
+
+
+
+</script>
+<{include file="public/footer" /}>

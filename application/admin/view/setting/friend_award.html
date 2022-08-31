@@ -1,0 +1,110 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">一级好友完成任务设置</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">首次完成任务</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_task_finish_1" lay-verify="required" lay-reqtext="首次完成任务奖励金额不能为空" placeholder="请输入首次完成任务奖励金额"  value="<{$configs['friend_award_task_finish_1']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">一级好友完成提现设置</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">首次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_1" lay-verify="required" lay-reqtext="首次完成提现奖励金额不能为空" placeholder="请输入首次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_1']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">第2次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_2" lay-verify="required" lay-reqtext="第2次完成提现奖励金额不能为空" placeholder="请输入第2次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_2']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">第3次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_3" lay-verify="required" lay-reqtext="第3次完成提现奖励金额不能为空" placeholder="请输入第3次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_3']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">第4次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_4" lay-verify="required" lay-reqtext="第4次完成提现奖励金额不能为空" placeholder="请输入第4次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_4']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">第5次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_5" lay-verify="required" lay-reqtext="第5次完成提现奖励金额不能为空" placeholder="请输入第5次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_5']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">第6次完成提现</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="friend_award_withdraw_6" lay-verify="required" lay-reqtext="第6次完成提现奖励金额不能为空" placeholder="请输入第6次完成提现奖励金额"  value="<{$configs['friend_award_withdraw_6']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+
+            let url = "<{:admin_api_url('setting/friend_award')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

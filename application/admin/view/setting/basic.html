@@ -1,0 +1,301 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+
+    .layuimini-form  .layui-form-item  .required:after {
+        content: '*';
+        color: red;
+        position: absolute;
+        margin-left: 4px;
+        font-weight: bold;
+        line-height: 1.8em;
+        top: 6px;
+        right: 5px;
+    }
+
+    .upload-button{
+        border: #cdcdcd dashed 1px;
+        border-radius: 5px;
+        background-image:url('__IMAGES__/icon/upload-plus-icon.png');
+        background-repeat:no-repeat;
+        background-position: center center;
+        cursor: pointer;
+    }
+
+    .video-upload-button-box,
+    .video-content-row
+    {
+        width: 80px;
+        height: 80px;
+    }
+
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">基础信息</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">应用名称</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="site_name" lay-verify="required" lay-reqtext="应用名称不能为空" placeholder="请输入应用名称"  value="<{$configs['site_name']}>" class="layui-input" maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">应用域名</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="site_domain" lay-verify="required" lay-reqtext="应用域名不能为空" placeholder="https://xxx.com"  value="<{$configs['site_domain']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline website-logo-box">
+                    <label class="layui-form-label required">网站图标</label>
+                    <div class="layui-input-block">
+                        <div class="upload-button image-btn image-btn-icon" style="width:80px;height: 80px"></div>
+                        <div class="image-upload-button-box">
+                            <img src="" data-value="" class="image-btn" id="logo" alt="" style="cursor: pointer;width:80px;height: 80px;display: none" title="点击更换">
+                        </div>
+                        <script>
+                            (function () {
+                                let logo = '<{$configs["site_logo"]}>';
+                                if(logo){
+                                    $('.website-logo-box .upload-button').hide();
+                                    $('.website-logo-box #logo').attr('src',logo).attr('data-value',logo).show();
+                                }
+                            })();
+                        </script>
+                    </div>
+                </div>
+                <div class="layui-inline website-mobile_logo-box">
+                    <label class="layui-form-label required">手机图标</label>
+                    <div class="layui-input-block">
+                        <div class="upload-button image-btn image-btn-icon" style="width:80px;height: 80px"></div>
+                        <div class="image-upload-button-box">
+                            <img src="" data-value="" class="image-btn" id="mobile_logo" alt="" style="cursor: pointer;width:80px;height: 80px;display: none" title="点击更换">
+                        </div>
+                        <script>
+                            (function () {
+                                let mobile_logo = '<{$configs["site_mobile_logo"]}>';
+                                if(mobile_logo){
+                                    $('.website-mobile_logo-box .upload-button').hide();
+                                    $('.website-mobile_logo-box #mobile_logo').attr('src',mobile_logo).attr('data-value',mobile_logo).show();
+                                }
+                            })();
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">数据库</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">驱动类型</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" value="Mysql" class="layui-input" disabled maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">主机地址</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="db_hostname" lay-verify="required" lay-reqtext="主机地址不能为空" placeholder="请输入主机地址"  value="<{$configs['db_hostname']}>" class="layui-input" maxlength="30">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">访问端口</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="db_hostport" lay-verify="required" lay-reqtext="访问端口不能为空" placeholder="请输入访问端口"  value="<{$configs['db_hostport']}>" class="layui-input" maxlength="30">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">数据库名</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="db_database" lay-verify="required" lay-reqtext="数据库名不能为空" placeholder="请输入数据库名"  value="<{$configs['db_database']}>" class="layui-input" maxlength="30">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">登录账号</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="db_username" lay-verify="required" lay-reqtext="登录账号不能为空" placeholder="请输入登录账号"  value="<{$configs['db_username']}>" class="layui-input" maxlength="30">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">登录密码</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="password" name="db_password" lay-verify="required" lay-reqtext="登录密码不能为空" placeholder="请输入登录密码"  value="<{$configs['db_password']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">缓存设置</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">驱动类型</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" value="Redis" class="layui-input" disabled maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">主机地址</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="cache_host" lay-verify="required" lay-reqtext="主机地址不能为空" placeholder="请输入主机地址"  value="<{$configs['cache_host']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">访问端口</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="cache_port" lay-verify="required" lay-reqtext="访问端口不能为空" placeholder="请输入访问端口"  value="<{$configs['cache_port']}>" class="layui-input" maxlength="30">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录密码</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="password" name="cache_password" placeholder="请输入登录密码"  value="<{$configs['cache_password']}>" class="layui-input" maxlength="100">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">非必填</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">公众号</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">appid</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="mobile_mp_app_id" lay-verify="required" lay-reqtext="appid不能为空" placeholder="请输入appid"  value="<{$configs['mobile_mp_app_id']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">secret</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="password" name="mobile_mp_app_secret" lay-verify="required" lay-reqtext="secret不能为空" placeholder="请输入secret"  value="<{$configs['mobile_mp_app_secret']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">访问网址</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="mobile_mp_link" lay-verify="required" lay-reqtext="访问网址不能为空" placeholder="https://xxx.com/#"  value="<{$configs['mobile_mp_link']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            upload = layui.upload,
+            miniTab = layui.miniTab;
+
+        //执行实例
+        upload.render({
+            elem: '.website-logo-box .image-btn' //绑定元素
+            ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+            ,accept: 'images'
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading');
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    let data = res.data[0];
+                    $('.website-logo-box .image-btn-icon').hide();
+                    $('.website-logo-box #logo').attr('src',data.url).attr('data-value',data.url).show();
+                    success_msg("上传成功");
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                error_msg('上传失败');
+            }
+        });
+
+        //执行实例
+        upload.render({
+            elem: '.website-mobile_logo-box .image-btn' //绑定元素
+            ,url: "<{:admin_api_url('upload/images')}>" //上传接口
+            ,accept: 'images'
+            ,before: function(obj){ //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading');
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    let data = res.data[0];
+                    $('.website-mobile_logo-box .image-btn-icon').hide();
+                    $('.website-mobile_logo-box #mobile_logo').attr('src',data.url).attr('data-value',data.url).show();
+                    success_msg("上传成功");
+                }
+            }
+            ,error: function(){
+                layer.closeAll('loading');
+                error_msg('上传失败');
+            }
+        });
+
+
+        form.render();
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            fields['site_logo'] = $('#logo').attr('data-value');
+            fields['site_mobile_logo'] = $('#mobile_logo').attr('data-value');
+
+            //网站图标
+            if((!fields['site_logo']) || fields['site_logo'] == ''){
+                error_msg('网站图标必须上传');
+                return false;
+            }
+
+            //手机图标
+            if((!fields['site_mobile_logo']) || fields['site_mobile_logo'] == ''){
+                error_msg('手机图标必须上传');
+                return false;
+            }
+
+            let url = "<{:admin_api_url('setting/basic')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

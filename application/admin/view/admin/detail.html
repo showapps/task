@@ -1,0 +1,120 @@
+<div class="detail_box layui-form layuimini-form" style="padding: 20px;">
+    <style>
+        .detail_box input{
+            border: none
+        }
+    </style>
+    <div class="layui-row">
+        <div class="layui-col-md4 layui-col-lg4" style="display: flex;justify-content:center;align-items:center">
+            <img src="<{$info.user.avatar}>" alt="" width="180" height="180" style="border-radius:50%">
+        </div>
+        <div class="layui-col-md8 layui-col-lg8">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">昵称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled  value="<{$info.user.nick_name}>" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">手机号:</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled  value="<{$info.user.phone}>" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">实名认证:</label>
+                <div class="layui-input-inline">
+                    <?php $certification_status_list = [1=>'待审核',2=>'待认证',100=>'已认证']; ?>
+                    <input type="text" disabled  value="<{$certification_status_list[$info['user']['certification_status']]}>" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <{if $info['user']['certification_status'] != 2}>
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">实名信息</blockquote>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">姓名:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.user.true_name}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">证件号码:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info['ext']['id_number']}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">正面照片:</label>
+                    <div class="layui-input-inline">
+                        <img src="<{$info['ext']['id_front']}>" alt="" width="200" height="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">背面照片:</label>
+                    <div class="layui-input-inline">
+                        <img src="<{$info['ext']['id_reverse']}>" alt="" width="200" height="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <{/if}>
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">管理信息</blockquote>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">所属角色:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.role.title}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">账号绑定</blockquote>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">微信:</label>
+                    <div class="layui-input-inline">
+                        <?php $is_wechat_list = [1=>'已绑定',2=>'未绑定']; ?>
+                        <input type="text" disabled  value="<{$is_wechat_list[$info['user']['is_wechat']]}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">账号信息</blockquote>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">登录名:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info['user']['user_name']}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 layui-col-lg4">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">注册时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info['user']['created_at']}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

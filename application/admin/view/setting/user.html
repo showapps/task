@@ -1,0 +1,131 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">初级代理</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">开通费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="agency_first_money" lay-verify="required" lay-reqtext="初级代理开通费用不能为空" placeholder="请输入初级代理开通费用"  value="<{$configs['agency_first.money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">高级代理 <span style="font-size: 12px;margin-left: 20px">注：推广门槛如果是0则不起用，一但达成，自动开通。</span></blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">开通费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="agency_high_money" lay-verify="required" lay-reqtext="高级代理开通费用不能为空" placeholder="请输入高级代理开通费用"  value="<{$configs['agency_high.money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required">推广代理</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="agency_high_spread_agency" lay-verify="required" lay-reqtext="高级代理推广代理门槛不能为空" placeholder="请输入高级代理推广代理门槛"  value="<{$configs['agency_high.spread_agency']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">人</div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">企业会员</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="agency_high_spread_company_level" lay-verify="required" lay-reqtext="高级代理推广企业会员门槛不能为空" placeholder="请输入高级代理推广企业会员门槛"  value="<{$configs['agency_high.spread_company_level']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">人</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">区域代理</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">注册开关</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="district_agency_register" lay-skin="switch" lay-text="开启|关闭" <?php echo $configs['district_agency.register'] ? 'checked' : '';?>>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">开通费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="district_agency_money" lay-verify="required" lay-reqtext="区域代理开通费用不能为空" placeholder="请输入区域代理开通费用"  value="<{$configs['district_agency.money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">运营商</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">注册开关</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="operator_register" lay-skin="switch" lay-text="开启|关闭" <?php echo $configs['operator.register'] ? 'checked' : '';?>>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">开通费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="operator_money" lay-verify="required" lay-reqtext="运营商开通费用不能为空" placeholder="请输入运营商开通费用"  value="<{$configs['operator.money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">大区代理</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">注册开关</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="big_agency_register" lay-skin="switch" lay-text="开启|关闭" <?php echo $configs['big_agency.register'] ? 'checked' : '';?>>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label required">开通费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="big_agency_money" lay-verify="required" lay-reqtext="大区代理开通费用不能为空" placeholder="请输入大区代理开通费用"  value="<{$configs['big_agency.money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            fields['big_agency_register'] = fields['big_agency_register'] == 'on' ? 1 : 2;
+            fields['district_agency_register'] = fields['district_agency_register'] == 'on' ? 1 : 2;
+            fields['operator_register'] = fields['operator_register'] == 'on' ? 1 : 2;
+
+            let url = "<{:admin_api_url('setting/user')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

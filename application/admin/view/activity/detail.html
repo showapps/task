@@ -1,0 +1,198 @@
+<div class="detail_box layui-form layuimini-form" style="padding: 20px;">
+    <style>
+        .detail_box input{
+            border: none
+        }
+        .detail_box textarea{
+            border: none
+        }
+    </style>
+    <div class="layui-row">
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">基础信息</blockquote>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">所素分类:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.category.title}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">项目标题:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info['project_title']}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动标题:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info['title']}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">商家信息:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.merchant.id}> : <{$info.merchant.nick_name}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动状态:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <?php $statusList = [1=>'待支付',2=>'待审核',3=>'审核驳回',4=>'已结束',100=>'进行中'];?>
+                        <input type="text" disabled  value="<{$statusList[$info['status']]}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">跳转链接:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.link|default='---'}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">文字要求:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.text_require|default='---'}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">限时提交:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.limited_submit}>小时" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">审核周期:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.audit_cycle}>小时" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">结束时间:</label>
+                    <div class="layui-input-inline" style="min-width: 400px">
+                        <input type="text" disabled  value="<{$info.end_dt}>"小时 class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">数据信息</blockquote>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动单价:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.price}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">活动总量:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.total}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">申请人数:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.apply_total}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">取消人数:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.cancel_total}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">提交人数:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.submit_total}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md6 layui-col-lg6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">完成人数:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" disabled  value="<{$info.finish_total}>" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-md12 layui-col-lg12">
+            <blockquote class="layui-elem-quote">任务步骤</blockquote>
+
+            <style>
+                .stepList{
+                    display: flex;
+                    align-items: stretch;
+                    flex-wrap: wrap;
+                }
+                .stepRow{
+                    width: 320px;
+                    border: 1px dashed #ccc;
+                    margin: 15px;
+                    padding: 15px;
+                }
+                .stepRow .index{
+                    width: 100%;
+                    line-height: 30px;
+                    margin-bottom: 10px;
+                }
+                .stepRow .describe{
+                    width: 100%;
+                    line-height: 30px;
+                    margin-bottom: 10px;
+                }
+                .stepRow img{
+                    width: 100%;
+                    height: 100%;
+                    cursor: pointer;
+                }
+            </style>
+
+            <div class="stepList">
+                <{volist name="$info.steps" id="step"}>
+                <div class="stepRow">
+                    <div class="index">第<{$key+1}>步 (图文说明)</div>
+                    <div class="describe"><{$step.describe}></div>
+                    <div class="image"><img src="<{$step.image}>" alt="" onclick="show_image_box(this.src,800,600)"></div>
+                </div>
+                <{/volist}>
+            </div>
+        </div>
+
+    </div>
+
+</div>

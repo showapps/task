@@ -1,0 +1,52 @@
+<div class="detail_box layui-form layuimini-form" style="padding: 20px;">
+    <style>
+        .detail_box input{
+            border: none
+        }
+        .detail_box textarea{
+            border: none
+        }
+    </style>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">发起用户:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <input type="text"  class="layui-input" readonly value="<{$info.user.nick_name}>(<{$info.user.id}>)">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">反馈理由:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <textarea name="content" class="layui-textarea" readonly maxlength="100"><{$info.content}></textarea>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">反馈图片</label>
+        <div class="layui-input-inline images-box" style="min-width: 350px">
+            <{volist name="$info['images']" id="img"}>
+                <img src="<{$img}>" alt="">
+            <{/volist}>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">处理状态:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <?php $status_list = [1=>'待处理',2=>'驳回',100=>'已处理']?>
+            <input type="text"  class="layui-input" readonly value="<{$status_list[$info['status']]}>">
+        </div>
+    </div>
+
+    <{if(in_array($info['status'],[2,100]))}>
+    <div class="layui-form-item">
+        <label class="layui-form-label">处理结果:</label>
+        <div class="layui-input-inline" style="min-width: 320px">
+            <textarea name="content" class="layui-textarea" readonly maxlength="100"><{$info.result}></textarea>
+        </div>
+    </div>
+    <{/if}>
+
+</div>

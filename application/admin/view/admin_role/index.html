@@ -1,0 +1,376 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'admin_role';
+?>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box" style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索内容</label>
+                            <div class="layui-input-inline" style="min-width: 400px">
+                                <input type="text" name="filters[search_text]" autocomplete="off" class="layui-input" placeholder="角色名称">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'create')}>
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <{/if}>
+            </div>
+        </script>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'update')}>
+                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="update">编辑</a>
+            <{/if}>
+
+            {{#  if(d.is_system == 1){ }}
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'access')}>
+                    <a class="layui-btn layui-btn-xs layui-btn-disabled" onclick="error_msg('不可以更新系统角色权限')">权限</a>
+                <{/if}>
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'delete')}>
+                    <a class="layui-btn layui-btn-xs layui-btn-disabled" onclick="error_msg('不可以删除系统角色')">删除</a>
+                <{/if}>
+            {{#  }else{ }}
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'access')}>
+                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="access">权限</a>
+                <{/if}>
+                <{if checkAdminPermissionByAction($adminPermission,$module_name,'delete')}>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+                <{/if}>
+            {{#  } }}
+        </script>
+
+        <script type="text/html" id="isSystemTextTpl">
+            {{#  if(d.is_system == 1){ }}
+            是
+            {{#  }else{ }}
+            否
+            {{#  } }}
+        </script>
+    </div>
+</div>
+
+<script>
+    var $;
+    layui.use(['form', 'table'], function () {
+        $ = layui.jquery;
+        var form = layui.form,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('admin/role/list')}>"
+            <{include file="public/table_common" /}>,
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'title', title: '角色名称'},
+                {field: 'is_system', title: '是否系统', templet:"#isSystemTextTpl"},
+                {field: 'created_at', width: 200, title: '创建时间', sort: true},
+                {field: 'tool',title: '操作', minWidth: 200, fixed:'right',templet:'#currentTableBar', align: "center"}
+            ]]
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                let url = "<{:admin_api_url('admin/role/create')}>";
+                $.post(url,{'_method':'get'},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '添加角色',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['480px', '200px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-role-create-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+
+                                    var field = data.field; //获取提交的字段
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+
+                                            success_msg('添加成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            set_list_filters(data.field);
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'update') {
+
+                let url = "<{:admin_api_url('admin/role/update')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+                        var index = layer.open({
+                            title: '角色编辑',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['480px', '200px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                $(window).on("resize", function () {
+                                    layer.full(index);
+                                });
+
+                                form.render();
+                            },
+                            yes: function(index, layero){
+
+                                let submitID = 'LAY-role-update-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+
+                                    var field = data.field; //获取提交的字段
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+
+                                            success_msg('编辑成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+
+                return false;
+            }else if(obj.event === 'access'){ //权限
+
+                var url = "<{:admin_api_url('admin/role/access')}>";
+                //获取页面模板
+                $.post(url, {role_id:data.id,_method:"GET"}, function(res){
+                    ajax_response_filtr(res)
+                    if(res.status == 200){
+                        layer.open({
+                            title: '设置权限'
+                            ,type: 1
+                            ,content: res.data
+                            ,maxmin: true
+                            ,area: ['80%', '80%']
+                            ,btn: ['确定', '取消']
+                            ,yes: function(index, layero){
+                                submitID = 'LAY-adminrole-access-submit'
+                                ,submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+
+                                    field.status = field.status == 1 ? 1 : 2;
+
+                                    //提交 Ajax 成功后，静态更新表格中的数据
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res)
+                                        if(res.status == 200){
+                                            layer.close(index); //关闭弹层
+                                            //执行搜索重载
+                                            table.reload('currentTableId', {
+                                                page: {curr: 1},
+                                                where: get_list_filters()
+                                            }, 'data');
+                                            layer.msg("设置成功");
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },success(){
+                                form.render()
+
+                                var checkedLength = $('#access_box').find('input:checked').length
+                                if(checkedLength>=1){
+                                    $('#access_box #checkbox_all').prop("checked", true);
+                                    form.render()
+                                }
+
+                                //全选
+                                form.on('checkbox(checkbox_all_checked)', function(data){
+
+                                    var is_checke = data.elem.checked;
+
+                                    if(is_checke){
+                                        $('#access_box input').prop("checked", true);
+                                    }else{
+                                        $('#access_box input').prop("checked", false);
+                                    }
+
+                                    form.render()
+                                });
+
+                                //模块
+                                form.on('checkbox(module_node_checked)', function(data){
+
+                                    var is_checke = data.elem.checked;
+                                    var module_id = data.value;
+
+                                    var checke_module_count = $('#access_box .module').find('input:checked').length;
+                                    if(is_checke){
+                                        $('#module_'+module_id+'_child_box input').prop("checked", true);
+                                    }else{
+                                        $('#module_'+module_id+'_child_box input').prop("checked", false);
+                                    }
+
+                                    var checke_module_count = $('#access_box .module').find('input:checked').length;
+                                    if(checke_module_count >= 1){
+                                        $('#access_box #checkbox_all').prop("checked", true);
+                                    }else{
+                                        $('#access_box #checkbox_all').prop("checked", false);
+                                    }
+
+                                    form.render()
+                                });
+
+                                //操作
+                                form.on('checkbox(action_node_checked)', function(data){
+
+                                    //console.log(data.value)
+                                    var module_id = $('#action_id_'+data.value).attr('module_id');
+                                    //console.log(module_id)
+                                    var is_checke = data.elem.checked;
+
+                                    var checke_count = $('#module_'+module_id+'_child_box').find('input:checked').length;
+
+                                    if(checke_count >= 1){
+                                        $('#module_id_'+module_id).prop("checked", true);
+                                    }else{
+                                        $('#module_id_'+module_id).prop("checked", false);
+                                    }
+
+                                    var checke_module_count = $('#access_box .module').find('input:checked').length;
+                                    //console.log(checke_module_count)
+                                    if(checke_module_count >= 1){
+                                        //console.log(111)
+                                        $('#access_box #checkbox_all').prop("checked", true);
+                                    }else{
+                                        $('#access_box #checkbox_all').prop("checked", false);
+                                    }
+
+                                    form.render()
+                                });
+                            }
+                        });
+                    }
+                },'json');
+            }else if (obj.event === 'delete') {
+
+                layer.confirm('您真的要删除这个角色吗？', function (index) {
+                    layer.close(index);
+                    let url = "<{:admin_api_url('admin/role/delete')}>";
+                    $.post(url,{id: data.id},function(res){
+                        ajax_response_filtr(res,$adminConfig);
+                        if(res.status == 200){
+                            obj.del();
+                            success_msg('操作成功');
+                        }
+                    },'json');
+                });
+                return false;
+            }
+        });
+
+    });
+</script>
+
+<{include file="public/footer" /}>

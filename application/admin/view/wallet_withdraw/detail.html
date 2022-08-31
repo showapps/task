@@ -1,0 +1,63 @@
+<div class="detail_box layui-form layuimini-form">
+
+    <style>
+
+        .detail_box{
+            padding: 20px
+        }
+
+        .detail_box input{
+            border: none
+        }
+
+    </style>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">交易编号</label>
+        <div class="layui-input-block">
+            <input type="text" value="<{$info.trade_no}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">提现金额</label>
+        <div class="layui-input-block">
+            <input type="text"  value="<{$info.money}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">到账金额</label>
+        <div class="layui-input-block">
+            <input type="text"  value="<{$info.actual_amount}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手续费费率</label>
+        <div class="layui-input-block">
+            <input type="text"  value="<{$info.service_charge_rate}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手续费金额</label>
+        <div class="layui-input-block">
+            <input type="text"  value="<{$info.service_charge}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">提现状态</label>
+        <div class="layui-input-block">
+            <?php $type_list = [1=>'待处理',2=>'提现驳回/失败',100=>'已完成'];?>
+            <input type="text"  value="<{$type_list[$info['status']]}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <blockquote class="layui-elem-quote">收款信息</blockquote>
+    <div class="layui-form-item">
+        <label class="layui-form-label">收款类型</label>
+        <div class="layui-input-block">
+            <?php $account_type_list = [1=>'支付宝',2=>'微信余额'];?>
+            <input type="text"  value="<{$account_type_list[$info['account_type']]}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+
+    <{if $info['account_type'] == 1}>
+    <{/if}>
+</div>

@@ -1,0 +1,39 @@
+<div class="audit_box layui-form layuimini-form" style="padding: 20px;">
+
+    <input type="hidden" name="id" value="<{$info.id}>">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">会员等级:</label>
+        <div class="layui-input-block user_level_box">
+            <input type="radio" name="user_level" value="0" lay-filter="user_level" title="无等级">
+            <input type="radio" name="user_level" value="1" lay-filter="user_level" title="喵达人">
+        </div>
+    </div>
+
+    <div class="layui-form-item user_level_end_box" style="display: none">
+        <label class="layui-form-label required">到期时间:</label>
+        <div class="layui-input-inline">
+            <input type="text" name="user_level_edate" id="user_level_edate" class="layui-input" readonly>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商家等级:</label>
+        <div class="layui-input-block merchant_level_box">
+            <input type="radio" name="merchant_level" value="0" lay-filter="merchant_level" title="无等级">
+            <input type="radio" name="merchant_level" value="1" lay-filter="merchant_level" title="超级商人">
+        </div>
+    </div>
+
+    <div class="layui-form-item merchant_level_end_box" style="display: none">
+        <label class="layui-form-label required">到期时间:</label>
+        <div class="layui-input-inline">
+            <input type="text" name="merchant_level_edate" id="merchant_level_edate" class="layui-input" readonly>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-vip-update-submit" id="LAY-vip-update-submit" value="确认">
+    </div>
+
+</div>

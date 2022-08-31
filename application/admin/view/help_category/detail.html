@@ -1,0 +1,93 @@
+<div class="detail_box layui-form layuimini-form">
+
+    <style>
+
+        .detail_box{
+            padding: 20px
+        }
+
+        .detail_box input{
+            border: none
+        }
+
+        .video-content-row{
+            position: absolute;
+        }
+
+        .video-upload-button-box,
+        .video-content-row
+        {
+            width: 180px;
+            height: 120px;
+        }
+
+    </style>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章标题</label>
+        <div class="layui-input-block">
+            <input type="text" value="<{$info.title}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章类型</label>
+        <div class="layui-input-block">
+            <?php $type_list = [1=>'富文本',2=>'视频'];?>
+            <input type="text"  value="<{$type_list[$info['type']]}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文章封面</label>
+        <div class="layui-input-block">
+            <div class="image-upload-button-box">
+                <img src="<{$info.image}>" style="width:180px;height: 120px">
+            </div>
+        </div>
+    </div>
+    <{if $info['type'] == 2}>
+    <div class="layui-form-item video-content-box">
+        <label class="layui-form-label required">视频内容</label>
+        <div class="layui-input-block" style="display: flex;">
+            <div class="video-upload-button-box">
+                <div class="video-content-row">
+                    <video width="180" height="120" controls="controls">
+                        <source src="<{$info.content}>"/>
+                        <embed width="180" height="120" src="<{$info.content}>" />
+                        </object>
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <{/if}>
+    <div class="layui-form-item">
+        <label class="layui-form-label">阅读次数</label>
+        <div class="layui-input-block">
+            <input type="number" value="<{$info.read}>" disabled class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">点赞次数</label>
+        <div class="layui-input-block">
+            <input type="number" value="<{$info.give}>" disabled class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-block">
+            <?php $status_list = [1=>'显示',2=>'隐藏'];?>
+            <input type="text"  value="<{$status_list[$info['status']]}>" disabled class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <{if $info['type'] == 1}>
+    <div class="layui-form-item html-content-box">
+        <label class="layui-form-label">文章内容</label>
+        <div class="layui-input-block">
+            <div>
+                <{$info.content|raw}>
+            </div>
+        </div>
+    </div>
+    <{/if}>
+
+</div>

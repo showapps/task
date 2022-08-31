@@ -1,0 +1,22 @@
+<div class="add_box layui-form layuimini-form" style="padding: 20px;">
+    <input type="hidden" name="id" value="<{$info.id}>">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">关联角色</label>
+        <div class="layui-input-inline">
+            <select name="role_id" lay-verify="required" lay-reqtext="请选择关联角色" lay-search="">
+                <option value="">请选择</option>
+                <{volist name="roles" id="role"}>
+                <option value="<{$role.id}>"
+                    <?php echo $role['id'] == 1 ? 'disabled' : '';?>
+                    <?php echo $role['id'] == $info['role_id'] ? 'selected' : '';?>
+                ><{$role.title}></option>
+                <{/volist}>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-admin-edit-submit" id="LAY-admin-edit-submit" value="确认">
+    </div>
+
+</div>

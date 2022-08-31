@@ -1,0 +1,38 @@
+<div class="edit_temp_html" style="display: none"></div>
+<div class="layui-form layuimini-form" style="padding: 20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">单页标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="标题不能为空" placeholder="请输入标题" value="" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">单页名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input" maxlength="80">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">页面排序</label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" placeholder="请输入排序值，越大越靠前" value="0" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态开关</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" lay-skin="switch" lay-text="显示|隐藏" checked >
+        </div>
+    </div>
+    <div class="layui-form-item html-content-box">
+        <label class="layui-form-label required">文章内容</label>
+        <div class="layui-input-block">
+            <textarea placeholder="" class="layui-textarea" name="content" id="content" lay-verify="content" style="display: none;"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-article-create-submit" id="LAY-article-create-submit" value="确认">
+    </div>
+
+</div>

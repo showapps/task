@@ -1,0 +1,344 @@
+<{include file="public/header" /}>
+<style>
+
+    .layuimini-form  .layui-form-item  .required:after {
+        content: '*';
+        color: red;
+        position: absolute;
+        margin-left: 4px;
+        font-weight: bold;
+        line-height: 1.8em;
+        top: 6px;
+        right: 5px;
+    }
+
+    body .layui-form .title-row-input-box{
+        min-width: 200px!important;
+        max-width: 700px!important;
+        width: 100%;
+    }
+
+    body .layui-form .month-row-input-box{
+        width: 80px!important;
+    }
+
+    body .layui-form .refresh_number-row-input-box{
+        width: 80px!important;
+    }
+
+    body .layui-form .original_price-row-input-box{
+        width: 80px!important;
+    }
+
+    body .layui-form .price-row-input-box{
+        width: 80px!important;
+    }
+
+    body .layui-form .sort-row{
+        width: 80px!important;
+    }
+
+    body .layui-form .status-row{
+        width: 34px!important;
+    }
+
+    body .layui-form .tools-row{
+        width: 34px!important;
+    }
+
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">通用部分</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">上推荐费用</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="activity_rec_money" lay-verify="required" lay-reqtext="上推荐费用不能为空" placeholder="请输入上推荐费用"  value="<{$configs['activity_rec_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">普通用户</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">提现费率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="withdraw_sc_rate" lay-verify="required" lay-reqtext="提现费率不能为空" placeholder="请输入提现费率"  value="<{$configs['withdraw_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">推荐手续费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="activity_rec_sc_rate" lay-verify="required" lay-reqtext="活动推荐手续费不能为空" placeholder="请输入活动推荐手续费"  value="<{$configs['activity_rec_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">喵达人</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">升级门槛</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="vip_user_vip_threshold" lay-verify="required" lay-reqtext="喵达人升级门槛不能为空" placeholder="请输入喵达人升级门槛"  value="<{$configs['vip_user_vip_threshold']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单任务 注：大于0单才开通</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">提现费率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="withdraw_user_sc_rate" lay-verify="required" lay-reqtext="提现费率不能为空" placeholder="请输入提现费率"  value="<{$configs['withdraw_user_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">推荐手续费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="activity_rec_user_sc_rate" lay-verify="required" lay-reqtext="活动推荐手续费不能为空" placeholder="请输入活动推荐手续费"  value="<{$configs['activity_rec_user_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">超级商人</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">提现费率</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="withdraw_merchant_sc_rate" lay-verify="required" lay-reqtext="提现费率不能为空" placeholder="请输入提现费率"  value="<{$configs['withdraw_merchant_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 125px">推荐手续费</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="activity_rec_merchant_sc_rate" lay-verify="required" lay-reqtext="活动推荐手续费不能为空" placeholder="请输入活动推荐手续费"  value="<{$configs['activity_rec_merchant_sc_rate']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">0~100%</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 22px!important;">
+                    <button class="layui-btn layui-btn-danger addBtn">添加</button>
+                </div>
+            </div>
+            <div class="layui-form-item" style="padding: 20px;padding-top: 10px">
+                <table class="layui-table">
+                    <colgroup>
+                        <col>
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="80">
+                        <col width="34">
+                    </colgroup>
+                    <thead>
+                    <th>规格标题</th>
+                    <th>月</th>
+                    <th>刷新数量</th>
+                    <th>原价</th>
+                    <th>售价</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody class="tbody-box">
+                    <{volist name="merchantSkuList" id="row"}>
+                    <tr>
+                        <td>
+                            <div class="id-row" style="display: none">
+                                <input type="hidden" name="datas[<{$row.id}>][id]" value="<{$row.id}>">
+                            </div>
+                            <div class="title-row">
+                                <div class="layui-input-inline title-row-input-box">
+                                    <input type="text" name="datas[<{$row.id}>][title]" lay-verify="required|title" lay-reqtext="标题不能为空" required maxlength="30" placeholder="请输入" autocomplete="off" value="<{$row.title}>" class="layui-input title-row-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="month-row">
+                                <div class="layui-input-inline month-row-input-box">
+                                    <input type="number" name="datas[<{$row.id}>][month]" lay-verify="required|month" lay-reqtext="月不能为空" required min="1" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="<{$row.month}>"  onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input month-row-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="refresh_number-row">
+                                <div class="layui-input-inline refresh_number-row-input-box">
+                                    <input type="number" name="datas[<{$row.id}>][refresh_number]" lay-verify="required|refresh_number" lay-reqtext="刷新数量不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="<{$row.refresh_number}>"  onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input refresh_number-row-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="original_price-row">
+                                <div class="layui-input-inline original_price-row-input-box">
+                                    <input type="number" name="datas[<{$row.id}>][original_price]" lay-verify="required|original_price" lay-reqtext="原价不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="<{$row.original_price}>" class="layui-input commissions-row-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="price-row">
+                                <div class="layui-input-inline price-row-input-box">
+                                    <input type="number" name="datas[<{$row.id}>][price]" lay-verify="required|price" lay-reqtext="原价不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="<{$row.price}>" class="layui-input commissions-row-input">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="tools-row">
+                                <button type="button" class="layui-btn layui-btn-danger layui-btn-xs delBtn">删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <{/volist}>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="addTemplate">
+    <tr>
+    <td>
+        <div class="title-row">
+            <div class="layui-input-inline title-row-input-box">
+                <input type="text" name="datas[--INDEX--][title]" lay-verify="required|title" lay-reqtext="标题不能为空" required maxlength="30" placeholder="请输入" autocomplete="off" value="" class="layui-input title-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="month-row">
+            <div class="layui-input-inline month-row-input-box">
+                <input type="number" name="datas[--INDEX--][month]" lay-verify="required|month" lay-reqtext="月不能为空" required min="1" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value=""  onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input month-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="refresh_number-row">
+            <div class="layui-input-inline refresh_number-row-input-box">
+                <input type="number" name="datas[--INDEX--][refresh_number]" lay-verify="required|refresh_number" lay-reqtext="刷新数量不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value=""  onkeyup="this.value=this.value.replace(/[^0-9]/gi,'')" class="layui-input refresh_number-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="original_price-row">
+            <div class="layui-input-inline original_price-row-input-box">
+                <input type="number" name="datas[--INDEX--][original_price]" lay-verify="required|original_price" lay-reqtext="原价不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="" class="layui-input commissions-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="price-row">
+            <div class="layui-input-inline price-row-input-box">
+                <input type="number" name="datas[--INDEX--][price]" lay-verify="required|price" lay-reqtext="原价不能为空" required min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="" class="layui-input commissions-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="sort-row">
+            <div class="layui-input-inline sort-row-input-box" style="width: 80px">
+                <input type="number" name="datas[--INDEX--][sort]" min="0" max="9999999" maxlength="3" placeholder="请输入" autocomplete="off" value="0" class="layui-input sort-row-input">
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="status-row">
+            <input type="checkbox" name="datas[--INDEX--][status]" checked lay-skin="switch" lay-text="开|关">
+        </div>
+    </td>
+    <td>
+        <div class="tools-row">
+            <button type="button" class="layui-btn layui-btn-danger layui-btn-xs delBtn">删除</button>
+        </div>
+    </td>
+</tr>
+</script>
+<script>
+    layui.use(['form','miniTab','upload'], function () {
+        var form = layui.form,
+            $ = layui.jquery,
+            layer = layui.layer,
+            upload = layui.upload,
+            miniTab = layui.miniTab;
+
+        form.verify({
+            title: function(value, item){
+                if((!value) || value == ''){
+                    return '标题必填';
+                }
+            },
+            month: function(value, item){
+                if(value < 1 || value > 99999){
+                    return '月份 1~99999 之间';
+                }
+            },
+            refresh_number: function(value, item){
+                if(value < 1 || value > 99999){
+                    return '刷新数量 1~99999 之间';
+                }
+            },
+            original_price: function(value, item){
+                if(value < 1 || value > 99999){
+                    return '原价 1~99999 之间';
+                }
+            },
+            price: function(value, item){
+                if(value < 1 || value > 99999){
+                    return '现价 1~99999 之间';
+                }
+            }
+        });
+
+        form.render();
+
+        $('.delBtn').click(function () {
+            $(this).parents("tr").remove();
+        });
+
+        $('.addBtn').click(function () {
+
+            let content = $('#addTemplate').text();
+            let index = (new Date().getTime()) + Math.round(Math.random()*10) + Math.round(Math.random()*10);
+            $('.tbody-box').append(content.replace(/--INDEX--/g, index));
+
+            $('.delBtn').click(function () {
+                $(this).parents("tr").remove();
+            });
+
+            form.render();
+        });
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            let url = "<{:admin_api_url('setting/vip')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

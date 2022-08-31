@@ -1,0 +1,533 @@
+<{include file="public/header" /}>
+
+<?php
+
+    use Tools\AdminPermission;
+
+    $role_id = Session::get('role_id');
+    $adminPermission = new AdminPermission();
+    $adminPermission->setRoleId($role_id);
+    $module_name = 'user';
+?>
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <textarea id="list_filters_box"style="display: none"></textarea>
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">搜索内容</label>
+                            <div class="layui-input-inline" style="min-width: 400px">
+                                <input type="text" name="filters[search_text]" autocomplete="off" class="layui-input" placeholder="ID/姓名/用户名/昵称/手机号">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">实名状态</label>
+                            <div class="layui-input-inline" style="min-width: 100px">
+                                <select id="filters-certification_status" name="filters[certification_status]">
+                                    <option value="0">全部</option>
+                                    <option value="1">待审核</option>
+                                    <option value="2">待实名</option>
+                                    <option value="3">审核驳回</option>
+                                    <option value="100">已实名</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <!--
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+            </div>
+        </script>
+        -->
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">详情</a>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'vip')}>
+                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="vip_update">会员</a>
+            <{/if}>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'balance')}>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="balance_update">余额</a>
+            <{/if}>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'deposit')}>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="deposit_update">押金</a>
+            <{/if}>
+            <{if checkAdminPermissionByAction($adminPermission,$module_name,'audit')}>
+                {{#  if(d.certification_status == 1){ }}
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="certification_audit">实名审核</a>
+                {{#  } }}
+            <{/if}>
+        </script>
+        <script type="text/html" id="genderTpl">
+            {{#  if(d.gender == 1){ }}
+            男
+            {{#  } else if(d.gender == 2){ }}
+            女
+            {{#  } else { }}
+            保密
+            {{#  } }}
+        </script>
+        <script type="text/html" id="isWechatTpl">
+            {{#  if(d.is_wechat == 1){ }}
+            已绑定
+            {{#  } else { }}
+            未绑定
+            {{#  } }}
+        </script>
+        <script type="text/html" id="userLevelTpl">
+            {{#  if(d.user_level == 1){ }}
+            喵达人
+            {{#  } else { }}
+            --
+            {{#  } }}
+        </script>
+        <script type="text/html" id="merchantLevelTpl">
+            {{#  if(d.merchant_level == 1){ }}
+            超级商人
+            {{#  } else { }}
+            --
+            {{#  } }}
+        </script>
+        <script type="text/html" id="certificationStatusTpl">
+            {{#  if(d.certification_status == 100){ }}
+            已实名
+            {{#  } else if(d.certification_status == 1){ }}
+            待审核
+            {{#  } else if(d.certification_status == 3){ }}
+            驳回
+            {{#  } else { }}
+            待实名
+            {{#  } }}
+        </script>
+        <script type="text/html" id="statusTpl">
+            {{#  if(d.status == 1){ }}
+            正常
+            {{#  } else { }}
+            禁用
+            {{#  } }}
+        </script>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laydate = layui.laydate,
+            table = layui.table;
+
+        table.render({
+            elem: '#currentTableId',
+            url: "<{:admin_api_url('user/list')}>",
+            method: 'post',
+            toolbar: '#toolbarDemo',request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'page_size' //每页数据量的参数名，默认：limit
+            },
+            parseData: function(res){ //res 即为原始返回的数据
+                ajax_response_filtr(res,$adminConfig);
+                let datas = [];
+                if(res.data && res.data.length >= 1){
+                    for (let key in res.data){
+                        let data = res.data[key];
+                        data.tool = false;
+                        datas.push(data);
+                    }
+                }
+                return {
+                    "code": res.status == 200 ? 0 : res.status, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.params.pages.total, //解析数据长度
+                    "data": datas //解析数据列表
+                };
+            },
+            defaultToolbar: ['filter', 'exports', 'print'],
+            cols: [[
+                //{type: "checkbox", width: 50},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'user_name', title: '用户名'},
+                {field: 'true_name', title: '姓名'},
+                {field: 'nick_name', title: '昵称'},
+                {field: 'phone', title: '手机号', hide:true},
+                //{field: 'email', title: '邮箱', hide:true},
+                {field: 'user_level', width: 80, title: '会员等级', templet:"#userLevelTpl", hide:true},
+                {field: 'merchant_level', width: 80, title: '商家等级', templet:"#merchantLevelTpl", hide:true},
+                {field: 'gender', width: 80, title: '性别', templet:"#genderTpl", hide:true},
+                //{field: 'birthday', title: '出生日期', hide:true},
+                {field: 'is_wechat', title: '微信', templet:"#isWechatTpl", sort: true},
+                {field: 'created_at', width: 180, title: '注册时间', sort: true},
+                {field: 'certification_status', width: 110, title: '实名状态', templet:"#certificationStatusTpl", sort: true},
+                {field: 'status', width: 110, title: '账户状态', templet:"#statusTpl", sort: true},
+                {field: 'tool',title: '操作', minWidth: 300, fixed:'right',templet:'#currentTableBar', align: "center"}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true,
+            loading: true,
+            skin: 'line',
+            //在表格加载完毕后执行的方法
+            done: function (res, curr, count) {
+                $(".exportClick").click(function(e) {
+                    console.log('e',e);
+                    $(".other_menu").toggle();
+                });
+            }
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '../page/table/add.html',
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(currentTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                let url = "<{:admin_api_url('user/detail')}>";
+                $.post(url,{'_method':'get', id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '用户详情',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            content: res.data,
+                        });
+
+                        $(window).on("resize", function () {
+                            layer.full(index);
+                        });
+                    }
+                },'json');
+
+                return false;
+            } else if (obj.event === 'switch') {
+
+                let status = data.status;
+                let tips = status == 1 ? '真的禁用吗？' : '真的启用吗？';
+                layer.confirm(tips, function (index) {
+                    layer.close(index);
+                    let url = "<{:admin_api_url('user/switch')}>";
+                    let newStatus = status == 1 ? 2 : 1;
+                    $.post(url,{id: data.id, status: newStatus},function(res){
+                        console.log(res);
+                        ajax_response_filtr(res,$adminConfig);
+                        if(res.status == 200){
+                            obj.update({status: newStatus,tool:true});
+                            success_msg('操作成功');
+                        }
+                    },'json');
+                });
+            } else if (obj.event === 'certification_audit') {
+
+                let url = "<{:admin_api_url('user/certification/audit')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '认证审核',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['80%', '80%'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                form.on('radio(certification_status)', function(data){
+                                    if(data.value == '100'){
+                                        $('.reasons_box').hide();
+                                    }else{
+                                        $('.reasons_box').show();
+                                    }
+                                });
+                                form.render();
+                            },
+                            yes: function(index, layero){
+                                let submitID = 'LAY-user-certification_audit-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+                                    field.certification_status = field.certification_status == 100 ? 100 : 3;
+
+                                    //通过
+                                    if(field.certification_status != '100'){
+                                        if(!field.reasons){
+                                            error_msg('备注必填');return;
+                                        }
+                                    }
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            obj.update({certification_status: field.certification_status,tool:true});
+                                            layer.close(index); //关闭弹层
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+                return false;
+
+            } else if (obj.event === 'vip_update') {
+
+                let url = "<{:admin_api_url('user/vip/update')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '更改会员等级',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['600px', '400px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+
+                                let info = res.params.info;
+                                let user_level = info.user_level;
+                                $('.user_level_box input[value="'+user_level+'"]').attr('checked',true);
+
+                                if(user_level == 1){
+                                    $('.user_level_end_box').show();
+                                    $('.user_level_end_box input').val(info.user_level_edate);
+                                }
+
+                                form.on('radio(user_level)', function(data){
+                                    if(data.value == '0'){
+                                        $('.user_level_end_box').hide();
+                                    }else{
+                                        $('.user_level_end_box').show();
+                                    }
+                                });
+
+                                let merchant_level = info.merchant_level;
+                                $('.merchant_level_box input[value="'+merchant_level+'"]').attr('checked',true);
+                                if(merchant_level == 1){
+                                    $('.merchant_level_end_box').show();
+                                    $('.merchant_level_end_box input').val(info.merchant_level_edate);
+                                }
+
+                                form.on('radio(merchant_level)', function(data){
+                                    if(data.value == '0'){
+                                        $('.merchant_level_end_box').hide();
+                                    }else{
+                                        $('.merchant_level_end_box').show();
+                                    }
+                                });
+
+                                laydate.render({
+                                    trigger: 'click',
+                                    elem: '#user_level_edate' //指定元素
+                                });
+
+                                laydate.render({
+                                    trigger: 'click',
+                                    elem: '#merchant_level_edate' //指定元素
+                                });
+
+                                form.render();
+
+                            },
+                            yes: function(index, layero){
+                                let submitID = 'LAY-vip-update-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+
+                                    if(field.user_level == '1' && ((!field.user_level_edate) || field.user_level_edate == '')){
+                                        error_msg('请选择会员的到期时间');
+                                    }
+
+                                    if(field.merchant_level == '1' && ((!field.merchant_level_edate) || field.merchant_level_edate == '')){
+                                        error_msg('请选择商家会员的到期时间');
+                                    }
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            obj.update({user_level: field.user_level,merchant_level: field.merchant_level,tool:true});
+                                            layer.close(index); //关闭弹层
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+                return false;
+
+            } else if (obj.event === 'balance_update') {
+
+                let url = "<{:admin_api_url('user/balance/update')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '变动余额',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['520px', '420px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                form.render();
+                            },
+                            yes: function(index, layero){
+                                let submitID = 'LAY-balance-update-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            obj.update({balance: field.balance,tool:true});
+                                            layer.close(index); //关闭弹层
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+                return false;
+
+            } else if (obj.event === 'deposit_update') {
+
+                let url = "<{:admin_api_url('user/deposit/update')}>";
+                $.post(url,{'_method':'get',id: data.id},function(res){
+                    ajax_response_filtr(res,$adminConfig);
+                    if(res.status == 200){
+
+                        var index = layer.open({
+                            title: '变动押金',
+                            type: 1,
+                            shade: 0.2,
+                            shadeClose: true,
+                            area: ['480px', '300px'],
+                            btn: ['确定', '取消'],
+                            content: res.data,
+                            success: function(layero, index){
+                                form.render();
+                            },
+                            yes: function(index, layero){
+                                let submitID = 'LAY-deposit-update-submit';
+                                let submit = layero.find('#'+ submitID);
+
+                                //监听提交
+                                form.on('submit('+ submitID +')', function(data){
+                                    var field = data.field; //获取提交的字段
+
+                                    //提交
+                                    $.post(url,field,function(res){
+                                        ajax_response_filtr(res,$adminConfig);
+                                        if(res.status == 200){
+                                            obj.update({deposit: field.deposit,tool:true});
+                                            layer.close(index); //关闭弹层
+                                            success_msg('操作成功');
+                                        }
+
+                                    },'json')
+
+                                });
+
+                                submit.trigger('click');
+                            },
+                        });
+                    }
+                },'json');
+                return false;
+
+            }
+        });
+
+    });
+</script>
+
+<{include file="public/footer" /}>

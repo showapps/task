@@ -1,0 +1,73 @@
+<div class="audit_box layui-form layuimini-form" style="padding: 20px;">
+
+    <style>
+        .audit_detail_box input{
+            border: none;
+        }
+    </style>
+
+    <input type="hidden" name="id" value="<{$info.id}>">
+    <div class="layui-col-md12 layui-col-lg12 audit_detail_box">
+        <blockquote class="layui-elem-quote">实名信息</blockquote>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">姓名:</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled  value="<{$info.true_name}>" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">证件类型:</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled  value="身份证" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">证件号码:</label>
+                <div class="layui-input-inline">
+                    <input type="text" disabled  value="<{$info['ext']['id_number']}>" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">正面图片:</label>
+                <div class="layui-input-inline">
+                    <img src="<{$info['ext']['id_front']}>" alt="" width="200" height="100" onclick="show_image_box(this.src,800,600)">
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md4 layui-col-lg4">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">背面图片:</label>
+                <div class="layui-input-inline">
+                    <img src="<{$info['ext']['id_reverse']}>" alt="" width="200" height="100" onclick="show_image_box(this.src,800,600)">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12 layui-col-lg12">
+        <blockquote class="layui-elem-quote">审核信息</blockquote>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">审核状态:</label>
+            <div class="layui-input-block">
+                <input type="radio" name="certification_status" value="100" lay-filter="certification_status" title="通过" checked>
+                <input type="radio" name="certification_status" value="3" lay-filter="certification_status" title="驳回">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text reasons_box" style="display: none">
+            <label class="layui-form-label required">审核备注:</label>
+            <div class="layui-input-block">
+                <textarea name="reasons" placeholder="请输入备注内容" class="layui-textarea" maxlength="50"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="LAY-user-certification_audit-submit" id="LAY-user-certification_audit-submit" value="确认">
+    </div>
+
+</div>

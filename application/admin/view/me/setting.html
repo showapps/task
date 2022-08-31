@@ -1,0 +1,62 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-form layuimini-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">登录账号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="user_name" lay-verify="required" lay-reqtext="登录账号不能为空" placeholder="请输入登录账号"  value="<{:$user['user_name']}>" class="layui-input">
+                    <tip>填写自己登录账号的名称。</tip>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">用户昵称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nick_name" lay-verify="required" lay-reqtext="用户昵称不能为空" placeholder="请输入用户昵称"  value="<{:$user['nick_name']}>" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label required">真实姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="true_name" lay-verify="required" lay-reqtext="真实姓名不能为空" placeholder="请输入真实姓名"  value="<{:$user['true_name']}>" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab,
+            laydate = layui.laydate;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let url = "<{:admin_api_url('me/setting')}>";
+            $.post(url,data.field,function(res){
+                console.log(res);
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('修改成功', {
+                        time:1500
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

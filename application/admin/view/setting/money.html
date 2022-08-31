@@ -1,0 +1,91 @@
+<{include file="public/header" /}>
+<style>
+    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">押金设置</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">最小押金</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="deposit_min_money" lay-verify="required" lay-reqtext="最小押金不能为空" placeholder="请输入最小押金"  value="<{$configs['deposit_min_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">最小充值金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="deposit_recharge_min_money" lay-verify="required" lay-reqtext="押金最小充值金额不能为空" placeholder="请输入押金最小充值金额"  value="<{$configs['deposit_recharge_min_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">最大充值金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="deposit_recharge_max_money" lay-verify="required" lay-reqtext="押金最大充值金额不能为空" placeholder="请输入押金最大充值金额"  value="<{$configs['deposit_recharge_max_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">钱包设置</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">最小充值金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="recharge_min_money" lay-verify="required" lay-reqtext="钱包最小充值金额不能为空" placeholder="请输入钱包最小充值金额"  value="<{$configs['recharge_min_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 120px">最大充值金额</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="recharge_max_money" lay-verify="required" lay-reqtext="钱包最大充值金额不能为空" placeholder="请输入钱包最大充值金额"  value="<{$configs['recharge_max_money']}>" class="layui-input" maxlength="10">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">单笔 / 元</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            miniTab = layui.miniTab;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+
+            let url = "<{:admin_api_url('setting/money')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>

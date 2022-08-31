@@ -1,0 +1,98 @@
+<{include file="public/header" /}>
+<style>
+
+    .layuimini-form  .layui-form-item  .required:after {
+        content: '*';
+        color: red;
+        position: absolute;
+        margin-left: 4px;
+        font-weight: bold;
+        line-height: 1.8em;
+        top: 6px;
+        right: 5px;
+    }
+
+</style>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form layuimini-form">
+            <blockquote class="layui-elem-quote">微信支付</blockquote>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">公众号 appid</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="wechat_payment_mp_app_id" lay-verify="required" lay-reqtext="公众号 appid不能为空" placeholder="请输入公众号 appid"  value="<{$configs['wechat_payment_mp_app_id']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">商户ID</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="text" name="wechat_payment_mch_id" lay-verify="required" lay-reqtext="商户ID不能为空" placeholder="请输入商户ID"  value="<{$configs['wechat_payment_mch_id']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">商户秘钥</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <input type="password" name="wechat_payment_key" lay-verify="required" lay-reqtext="商户秘钥不能为空" placeholder="请输入商户秘钥"  value="<{$configs['wechat_payment_key']}>" class="layui-input" maxlength="100">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">证书 cert</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <textarea class="layui-textarea" name="wechat_payment_cert_client" lay-verify="required" lay-reqtext="证书 cert 不能为空" placeholder="请输入证书 cert 文件内容"><{$configs['wechat_payment_cert_client']}></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label required" style="min-width: 150px">证书 key</label>
+                    <div class="layui-input-inline" style="min-width: 320px">
+                        <textarea class="layui-textarea" name="wechat_payment_cert_key" lay-verify="required" lay-reqtext="证书 key 不能为空" placeholder="请输入证书 key 文件内容"><{$configs['wechat_payment_cert_key']}></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form','miniTab','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            upload = layui.upload,
+            miniTab = layui.miniTab;
+
+        form.render();
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            let fields = data.field;
+            let url = "<{:admin_api_url('setting/payment')}>";
+            $.post(url,fields,function(res){
+                ajax_response_filtr(res,$adminConfig);
+                if(res.status == 200){
+                    layer.msg('操作成功', {
+                        time:1500
+                    }, function () {
+                        location.reload()
+                    });
+                }
+            },'json');
+
+            return false;
+        });
+
+    });
+</script>
+<{include file="public/footer" /}>
